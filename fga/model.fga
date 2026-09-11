@@ -1,0 +1,30 @@
+model
+  schema 1.1
+
+type user
+
+type company
+  relations
+    define hr: [user]
+    define compliance: [user]
+    define ops_admin: [user]
+
+type site
+  relations
+    define company: [company]
+    define supervisor: [user]
+    define manager: [user]
+    define can_view_cases: supervisor or manager or hr from company or ops_admin from company
+    define can_act_on_cases: supervisor or manager
+
+type case
+  relations
+    define site: [site]
+    define company: [company]
+    define can_view: can_view_cases from site
+    define can_act: can_act_on_cases from site
+    # Speak-up cases are checked with can_view_speakup, never can_view. A
+    # supervisor has can_view on their site's cases; they must never reach a
+    # report that may be about them.
+    define can_view_speakup: hr from company or compliance from company
+    define can_approve_pay: hr from company

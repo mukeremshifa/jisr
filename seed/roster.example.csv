@@ -1,0 +1,9 @@
+# Example roster. Copy to seed/roster.local.csv and put real numbers there.
+# roster.local.csv is gitignored; this file must never contain a real number.
+# hourly_rate_fils is integer fils: 850 = AED 8.50/hour.
+phone,display_name,site_code,language,hourly_rate_fils
++15550100001,Worker One,B,hi,850
++15550100002,Worker Two,B,ur,825
++15550100003,Worker Three,A,ml,900
++15550100004,Worker Four,A,tl,875
++15550100005,Worker Five,B,bn,800

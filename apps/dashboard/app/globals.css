@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/*
+ * A site office board: ordered, scannable, grayscale first.
+ *
+ * Colour is a signal, not decoration. There is exactly one loud colour, and it
+ * means "act now" — past SLA, or critical. Everything else is ink on paper.
+ */
+@theme {
+  --color-paper: #fbfbfa;
+  --color-card: #ffffff;
+  --color-rule: #e4e3df;
+  --color-rule-strong: #c9c7c1;
+  --color-ink: #16150f;
+  --color-ink-2: #55534b;
+  --color-ink-3: #86837a;
+  /* The only loud colour in the product. */
+  --color-act: #c0392b;
+  --color-act-soft: #fdf0ee;
+
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+
+  --font-sans: "Noto Sans", "Noto Sans Devanagari", "Noto Sans Malayalam",
+    "Noto Sans Bengali", "Noto Sans Tamil", "Noto Naskh Arabic",
+    "Noto Nastaliq Urdu", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  /* Numbers line up in columns, which is most of what this page is. */
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Visible focus everywhere. Keyboard users are not a special case. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.card {
+  background: var(--color-card);
+  border: 1px solid var(--color-rule);
+  border-radius: 4px;
+}
+
+.rule {
+  border-color: var(--color-rule);
+}
+
+.label {
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--color-ink-3);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+/* The signature element: the worker's own words beside the English. */
+.bridge {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-6);
+}
+
+@media (max-width: 720px) {
+  .bridge {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2);
+  }
+}
+
+.bridge-original {
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.bridge-english {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--color-ink-2);
+}
+
+table.board {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table.board th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--color-ink-3);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-bottom: 1px solid var(--color-rule);
+}
+
+table.board td {
+  padding: var(--spacing-4);
+  border-bottom: 1px solid var(--color-rule);
+  vertical-align: top;
+  font-size: 14px;
+}
+
+table.board tr:last-child td {
+  border-bottom: 0;
+}

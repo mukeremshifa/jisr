@@ -1,0 +1,33 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "composite": false,
+    "incremental": false,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@jisr/core": ["packages/core/src/index.ts"],
+      "@jisr/core/*": ["packages/core/src/*"],
+      "@jisr/db": ["packages/db/src/index.ts"],
+      "@jisr/db/*": ["packages/db/src/*"],
+      "@jisr/ai": ["packages/ai/src/index.ts"],
+      "@jisr/ai/*": ["packages/ai/src/*"],
+      "@jisr/integrations": ["packages/integrations/src/index.ts"],
+      "@jisr/integrations/*": ["packages/integrations/src/*"]
+    }
+  },
+  "include": [
+    "packages/*/src/**/*.ts",
+    "apps/gateway/src/**/*.ts",
+    "apps/worker/src/**/*.ts",
+    "apps/worker/trigger.config.ts",
+    "scripts/**/*.ts",
+    "seed/**/*.ts",
+    "tests/**/*.ts"
+  ],
+  "exclude": ["node_modules", "**/dist", "apps/dashboard"]
+}

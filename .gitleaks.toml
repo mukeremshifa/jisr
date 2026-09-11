@@ -1,0 +1,21 @@
+# gitleaks configuration for Jisr. The repo is public: nothing secret ships.
+[extend]
+useDefault = true
+
+[[rules]]
+id = "jisr-env-assignment"
+description = "A non-empty value assigned to a known secret env var"
+regex = '''(?i)^(OPENAI_API_KEY|OPENROUTER_API_KEY|TWILIO_AUTH_TOKEN|TRIGGER_SECRET_KEY|INTELLIGENCE_API_KEY|SLACK_BOT_TOKEN|SLACK_SIGNING_SECRET|SLACK_APP_TOKEN|AUTH0_CLIENT_SECRET|AUTH0_SECRET|AUTH0_CIBA_CLIENT_SECRET|FGA_CLIENT_SECRET|AMBIGUOUS_API_KEY|EXA_API_KEY|DATA_ENCRYPTION_KEY|SEALING_KEY|PHONE_HMAC_KEY|DATABASE_URL|DATABASE_URL_MIGRATOR)\s*=\s*.+$'''
+path = '''\.env.*'''
+
+[[rules]]
+id = "jisr-e164-phone"
+description = "A phone number that looks real"
+regex = '''\+9715[0-9]{8}'''
+
+[allowlist]
+paths = [
+  '''\.env\.example$''',
+  '''pnpm-lock\.yaml$''',
+  '''seed/roster\.example\.csv$''',
+]

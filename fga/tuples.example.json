@@ -1,0 +1,14 @@
+[
+  {
+    "_comment": "Seed tuples for the demo. Replace the UUIDs with the ids `pnpm seed` prints, then write them with the FGA CLI: fga tuple write --file fga/tuples.json",
+    "user": "user:<hr-staff-id>",
+    "relation": "hr",
+    "object": "company:<company-id>"
+  },
+  { "user": "user:<compliance-staff-id>", "relation": "compliance", "object": "company:<company-id>" },
+  { "user": "user:<ops-admin-staff-id>", "relation": "ops_admin", "object": "company:<company-id>" },
+  { "user": "company:<company-id>", "relation": "company", "object": "site:<site-a-id>" },
+  { "user": "company:<company-id>", "relation": "company", "object": "site:<site-b-id>" },
+  { "user": "user:<supervisor-a-staff-id>", "relation": "supervisor", "object": "site:<site-a-id>" },
+  { "user": "user:<supervisor-b-staff-id>", "relation": "supervisor", "object": "site:<site-b-id>" }
+]

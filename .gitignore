@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.next/
+out/
+tmp/
+coverage/
+*.tsbuildinfo
+
+# Secrets — never commit anything but .env.example
+.env
+.env.*
+!.env.example
+
+# Real phone numbers live here only
+seed/roster.local.csv
+
+.DS_Store
+.vscode/
+.idea/
+.trigger/
