@@ -113,16 +113,54 @@ export async function sendWhatsAppMeta(input: SendWhatsAppInput): Promise<SendRe
     text: { preview_url: false, body: input.body },
   });
 
-  if (input.mediaUrl) {
-    await postMessage({ to, type: 'audio', audio: { link: input.mediaUrl } }).catch(
-      (error: unknown) => {
-        // The words already went out; a failed voice note must not undo that.
-        log.warn('meta_voice_note_failed', { error });
-      },
-    );
+  // `voice: true` on an uploaded id is what renders a real voice note; a `link`
+  // renders a plain audio file, so the id path is preferred when we have one.
+  const audio = input.mediaId ? { id: input.mediaId, voice: true } : input.mediaUrl ? { link: input.mediaUrl } : null;
+  if (audio) {
+    await postMessage({ to, type: 'audio', audio }).catch((error: unknown) => {
+      // The words already went out; a failed voice note must not undo that.
+      log.warn('meta_voice_note_failed', { error });
+    });
   }
 
   return sent;
+}
+
+/**
+ * Uploads audio bytes to the Cloud API media endpoint and returns the media id.
+ *
+ * OGG/Opus mono is the only audio WhatsApp accepts as a voice note, which is
+ * what the TTS layer already produces.
+ *
+ * https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media
+ */
+export async function uploadMetaMedia(input: {
+  bytes: Buffer;
+  contentType: string;
+  filename: string;
+}): Promise<string> {
+  if (!config.META_PHONE_NUMBER_ID || !config.META_ACCESS_TOKEN) {
+    throw new NotConfiguredError('Meta (META_PHONE_NUMBER_ID, META_ACCESS_TOKEN)');
+  }
+
+  const form = new FormData();
+  form.append('messaging_product', 'whatsapp');
+  form.append('type', input.contentType);
+  form.append('file', new Blob([new Uint8Array(input.bytes)], { type: input.contentType }), input.filename);
+
+  const response = await fetch(graph(`${config.META_PHONE_NUMBER_ID}/media`), {
+    method: 'POST',
+    headers: { authorization: `Bearer ${config.META_ACCESS_TOKEN}` },
+    body: form,
+    signal: AbortSignal.timeout(30_000),
+  });
+
+  const text = await response.text();
+  if (!response.ok) throw new Error(`meta media upload failed ${response.status}: ${text.slice(0, 200)}`);
+
+  const parsed = JSON.parse(text) as { id?: string };
+  if (!parsed.id) throw new Error('meta media upload returned no id');
+  return parsed.id;
 }
 
 export interface MetaMediaRef {

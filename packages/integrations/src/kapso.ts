@@ -96,16 +96,56 @@ export async function sendWhatsAppKapso(input: SendWhatsAppInput): Promise<SendR
     text: { preview_url: false, body: input.body },
   });
 
-  if (input.mediaUrl) {
-    await postMessage({ to, type: 'audio', audio: { link: input.mediaUrl } }).catch(
-      (error: unknown) => {
-        // The words already went out; a failed voice note must not undo that.
-        log.warn('kapso_voice_note_failed', { error });
-      },
-    );
+  // `voice: true` on an uploaded id is what renders a real voice note; a `link`
+  // renders a plain audio file, so the id path is preferred when we have one.
+  const audio = input.mediaId ? { id: input.mediaId, voice: true } : input.mediaUrl ? { link: input.mediaUrl } : null;
+  if (audio) {
+    await postMessage({ to, type: 'audio', audio }).catch((error: unknown) => {
+      // The words already went out; a failed voice note must not undo that.
+      log.warn('kapso_voice_note_failed', { error });
+    });
   }
 
   return sent;
+}
+
+/**
+ * Uploads audio bytes to Kapso's media endpoint and returns the media id.
+ *
+ * Sending a voice note by id rather than by link is what makes WhatsApp render
+ * it as a voice note — a mic icon and inline playback — instead of a file with
+ * a download arrow. It also means outbound audio needs no public URL, and so no
+ * object storage at all.
+ *
+ * https://docs.kapso.ai/api/meta/whatsapp/media/upload-media
+ */
+export async function uploadKapsoMedia(input: {
+  bytes: Buffer;
+  contentType: string;
+  filename: string;
+}): Promise<string> {
+  if (!config.KAPSO_API_KEY || !config.KAPSO_PHONE_NUMBER_ID) {
+    throw new NotConfiguredError('Kapso (KAPSO_API_KEY, KAPSO_PHONE_NUMBER_ID)');
+  }
+
+  const form = new FormData();
+  form.append('messaging_product', 'whatsapp');
+  form.append('file', new Blob([new Uint8Array(input.bytes)], { type: input.contentType }), input.filename);
+
+  const base = config.KAPSO_API_BASE.replace(/\/+$/, '');
+  const response = await fetch(`${base}/${config.KAPSO_PHONE_NUMBER_ID}/media`, {
+    method: 'POST',
+    headers: { 'x-api-key': config.KAPSO_API_KEY },
+    body: form,
+    signal: AbortSignal.timeout(30_000),
+  });
+
+  const text = await response.text();
+  if (!response.ok) throw new Error(`kapso media upload failed ${response.status}: ${text.slice(0, 200)}`);
+
+  const parsed = JSON.parse(text) as { id?: string };
+  if (!parsed.id) throw new Error('kapso media upload returned no id');
+  return parsed.id;
 }
 
 /**

@@ -7,14 +7,26 @@ import {
   sanitizeText,
 } from '@jisr/core';
 import { decryptField, repo, withTenant } from '@jisr/db';
-import { sendWhatsAppMessage, signedUrl, uploadMedia } from '@jisr/integrations';
+import {
+  isGcsConfigured,
+  sendWhatsAppMessage,
+  signedUrl,
+  supportsMediaUpload,
+  uploadMedia,
+  uploadWhatsAppMedia,
+} from '@jisr/integrations';
 
 /**
  * Everything Jisr says to a worker goes through here.
  *
- *   text -> speech in their language -> OGG/Opus -> private GCS -> a signed URL
- *   that Twilio can fetch for an hour -> one WhatsApp message carrying the voice
- *   note and the same words as text underneath.
+ *   text -> speech in their language -> OGG/Opus -> the carrier's own media
+ *   store (or private GCS, for a carrier that cannot host media) -> one WhatsApp
+ *   message carrying the voice note and the same words as text underneath.
+ *
+ * Meta and Kapso accept an upload and hand back a media id; sending that id is
+ * both what makes WhatsApp render a true voice note and what lets voice work
+ * with no object storage configured. Twilio has no media endpoint and can only
+ * fetch a URL, so it still needs GCS.
  *
  * The phone number is decrypted here and nowhere else, and it is never logged.
  */
@@ -52,18 +64,39 @@ export async function sendToWorker(input: SendToWorkerInput): Promise<SendResult
   const language = input.language ?? worker.language;
   let mediaId: string | null = null;
   let mediaUrl: string | undefined;
+  let carrierMediaId: string | undefined;
 
   if (input.voice !== false) {
     try {
       const speech = await synthesizeSpeech({ text, language });
-      const uploaded = await uploadMedia({
-        bytes: speech.bytes,
-        contentType: speech.contentType,
-        extension: speech.extension,
-      });
+
+      // Where the audio lives. The carrier's own store is preferred: it renders
+      // as a voice note and needs no bucket. GCS is the fallback for Twilio,
+      // and the record it leaves is what lets the dashboard replay the audio.
+      let gcsKey: string | null = null;
+      if (supportsMediaUpload()) {
+        carrierMediaId = await uploadWhatsAppMedia({
+          bytes: speech.bytes,
+          contentType: speech.contentType,
+          filename: `voice.${speech.extension}`,
+        });
+      }
+      if (!carrierMediaId || isGcsConfigured()) {
+        const uploaded = await uploadMedia({
+          bytes: speech.bytes,
+          contentType: speech.contentType,
+          extension: speech.extension,
+        });
+        gcsKey = uploaded.gcsKey;
+        // Twilio fetches this URL itself, so it lives longer than a dashboard link.
+        if (!carrierMediaId) mediaUrl = await signedUrl(uploaded.gcsKey, 'twilio');
+      }
+
+      // The media row is the dashboard's handle on the audio, and `gcs_key` is
+      // NOT NULL, so a carrier-hosted note records the id it does have.
       const media = await withTenant(input.companyId, ({ tx }) =>
         repo(input.companyId, tx).insertMedia({
-          gcsKey: uploaded.gcsKey,
+          gcsKey: gcsKey ?? `carrier:${config.WHATSAPP_PROVIDER}:${carrierMediaId}`,
           contentType: speech.contentType,
           bytes: speech.bytes.byteLength,
           sha256: '',
@@ -72,8 +105,6 @@ export async function sendToWorker(input: SendToWorkerInput): Promise<SendResult
         }),
       );
       mediaId = media.id;
-      // Twilio fetches this URL itself, so it lives longer than a dashboard link.
-      mediaUrl = await signedUrl(uploaded.gcsKey, 'twilio');
     } catch (error) {
       // Text still goes out. A worker who cannot read gets less, but they get
       // something, and the failure is visible in the logs rather than silent.
@@ -99,6 +130,7 @@ export async function sendToWorker(input: SendToWorkerInput): Promise<SendResult
     sent = await sendWhatsAppMessage({
       toE164: phone,
       body: text,
+      ...(carrierMediaId ? { mediaId: carrierMediaId } : {}),
       ...(mediaUrl ? { mediaUrl } : {}),
       ...(statusCallbackUrl ? { statusCallbackUrl } : {}),
     });

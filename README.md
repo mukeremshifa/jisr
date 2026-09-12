@@ -28,7 +28,7 @@ and where the labour rules are specific — the midday outdoor-work break from
  Twilio ──webhook──▶ Gateway (Hono, Cloud Run) ──trigger──▶ Trigger.dev tasks ─┤
         ▲            validate · dedupe · persist            intake · case lifecycle
         │            hosts the Channels runtime             broadcast · speak-up relay
-        └── voice notes (signed GCS URLs) ◀──────────────── pay approval · execution
+        └── voice notes (carrier media, or signed GCS URLs) ◀──── pay approval · execution
                                                                    │
         OpenAI · OpenRouter · Google TTS · Exa · Auth0 (FGA + CIBA) · Ambiguous (MCP)
                           Postgres (Neon) · Google Cloud Storage (private)
@@ -61,7 +61,7 @@ properly:
 | **Auth0** | Universal Login for the dashboard; **FGA** for every authorization decision, failing closed; **CIBA** for the second pay approval, on HR's phone, with the payload hash in `authorization_details` |
 | **Exa** | Grounds policy answers in official UAE sources, restricted to an allowlist of domains that is enforced in the request *and* again on every result |
 | **Ambiguous** | The payroll adjustments sheet an approved correction is written to, and case task mirroring — over MCP, calling `tools/list` first rather than guessing tool names |
-| **Google Cloud** | Cloud Run for both services, a private GCS bucket for all media with V4 signed URLs, and Chirp 3 HD voices for the languages the matrix routes to Google |
+| **Google Cloud** | Cloud Run for both services, a private GCS bucket for media with V4 signed URLs, and Chirp 3 HD voices for the languages the matrix routes to Google. Outbound voice notes go to the carrier's own media store when it has one (Meta, Kapso), so GCS is only required for Twilio |
 | **Mozilla.ai** | Not integrated. `any-guardrail` for PII detection was the last item on the list and the build window ended first |
 
 ---
@@ -87,8 +87,11 @@ Next.js only reads env files from its own folder. The gateway's health check is
 
 **The minimum to see a voice note become a Slack card:** `DATABASE_URL`, the
 three 32-byte crypto keys (`openssl rand -base64 32` each), `OPENAI_API_KEY`,
-the four `TWILIO_*` values, `TRIGGER_SECRET_KEY`, `GCS_BUCKET`,
-`PUBLIC_GATEWAY_URL`, and either `SLACK_BOT_TOKEN` or `INTELLIGENCE_API_KEY`.
+the four `TWILIO_*` values, `TRIGGER_SECRET_KEY`, `PUBLIC_GATEWAY_URL`, and
+either `SLACK_BOT_TOKEN` or `INTELLIGENCE_API_KEY`. `GCS_BUCKET` is needed for
+inbound media and for outbound voice on Twilio; on Meta and Kapso the voice note
+is uploaded to the carrier, which is also the only way WhatsApp renders it as a
+voice note rather than a file.
 
 After seeding, set `DEFAULT_COMPANY_ID`, fill in `fga/tuples.json` from the staff
 ids the seed prints (see `fga/README.md`), and point each site's Slack channel at

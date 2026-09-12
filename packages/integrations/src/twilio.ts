@@ -72,6 +72,13 @@ export interface SendWhatsAppInput {
   body: string;
   /** Short-lived signed URL for the voice note. */
   mediaUrl?: string;
+  /**
+   * Carrier-hosted media id for the voice note, from uploading the audio to the
+   * carrier. Preferred over `mediaUrl`: WhatsApp only renders a true voice note
+   * for an uploaded id, and it needs no public URL. Ignored by Twilio, which
+   * has no media upload endpoint and always fetches a URL.
+   */
+  mediaId?: string;
   /** Idempotency at our layer: we never send the same logical message twice. */
   statusCallbackUrl?: string;
 }

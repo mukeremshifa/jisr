@@ -171,3 +171,63 @@ describe('Kapso webhook parsing', () => {
     expect(parseKapsoWebhook({ message: { from: '971500000000' } }).messages).toHaveLength(0);
   }, IMPORT_TIMEOUT_MS);
 });
+
+describe('Kapso outbound voice notes', () => {
+  /** Captures the request bodies the adapter posts, so we can assert their shape. */
+  async function loadWithCapture() {
+    vi.resetModules();
+    process.env.KAPSO_API_KEY = 'test-key';
+    process.env.KAPSO_PHONE_NUMBER_ID = '123456789';
+    const bodies: any[] = [];
+    vi.stubGlobal('fetch', async (url: any, init: any) => {
+      bodies.push({ url: String(url), body: init?.body });
+      return new Response(JSON.stringify({ messages: [{ id: 'wamid.out' }], id: 'media-987' }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      });
+    });
+    const mod = await import('@jisr/integrations');
+    return { mod, bodies };
+  }
+
+  it('sends an uploaded media id as a true voice note', async () => {
+    const { mod, bodies } = await loadWithCapture();
+    await mod.sendWhatsAppKapso({ toE164: '+971500000000', body: 'hello', mediaId: 'media-987' });
+
+    const audio = bodies.map((b) => JSON.parse(b.body)).find((b) => b.type === 'audio');
+    // `voice: true` is what renders a mic icon rather than a file attachment.
+    expect(audio.audio).toEqual({ id: 'media-987', voice: true });
+    expect(audio.audio.link).toBeUndefined();
+  }, IMPORT_TIMEOUT_MS);
+
+  it('falls back to a link when there is no uploaded id', async () => {
+    const { mod, bodies } = await loadWithCapture();
+    await mod.sendWhatsAppKapso({ toE164: '+971500000000', body: 'hello', mediaUrl: 'https://x/a.ogg' });
+
+    const audio = bodies.map((b) => JSON.parse(b.body)).find((b) => b.type === 'audio');
+    expect(audio.audio).toEqual({ link: 'https://x/a.ogg' });
+  }, IMPORT_TIMEOUT_MS);
+
+  it('sends text only when there is neither', async () => {
+    const { mod, bodies } = await loadWithCapture();
+    await mod.sendWhatsAppKapso({ toE164: '+971500000000', body: 'hello' });
+
+    const types = bodies.map((b) => JSON.parse(b.body).type);
+    expect(types).toEqual(['text']);
+  }, IMPORT_TIMEOUT_MS);
+
+  it('uploads audio as multipart and returns the media id', async () => {
+    const { mod, bodies } = await loadWithCapture();
+    const id = await mod.uploadKapsoMedia({
+      bytes: Buffer.from('fake-ogg'),
+      contentType: 'audio/ogg',
+      filename: 'voice.ogg',
+    });
+
+    expect(id).toBe('media-987');
+    const upload = bodies.find((b) => b.url.endsWith('/media'));
+    expect(upload).toBeTruthy();
+    expect(upload.body).toBeInstanceOf(FormData);
+    expect(upload.body.get('messaging_product')).toBe('whatsapp');
+  }, IMPORT_TIMEOUT_MS);
+});
