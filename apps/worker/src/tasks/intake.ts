@@ -11,6 +11,7 @@ import {
   AUDIO_TOO_LONG_REPLY,
   BUDGET_TRIPPED_REPLY,
   IntakeMessagePayload,
+  MEDIA_UNAVAILABLE_REPLY,
   TRANSCRIPT_UNCLEAR_REPLY,
   UNKNOWN_STICKER_REPLY,
   UNSUPPORTED_MEDIA_REPLY,
@@ -38,6 +39,7 @@ import {
   MediaRejected,
   downloadWhatsAppMedia,
   estimateAudioSeconds,
+  isGcsConfigured,
   listMessageMedia,
   prepareMedia,
   uploadMedia,
@@ -323,11 +325,17 @@ async function ingestMedia(input: {
         bytes: downloaded.bytes,
         declaredContentType: downloaded.declaredContentType,
       });
-      const uploaded = await uploadMedia({
-        bytes: prepared.bytes,
-        contentType: prepared.contentType,
-        extension: prepared.extension,
-      });
+      // Storing the bytes is for the dashboard's benefit, not intake's: the
+      // transcript comes from the buffer we already hold. So a deployment with
+      // no bucket still understands a voice note, it just cannot replay it.
+      // Mirrors the same choice on the outbound side.
+      const uploaded = isGcsConfigured()
+        ? await uploadMedia({
+            bytes: prepared.bytes,
+            contentType: prepared.contentType,
+            extension: prepared.extension,
+          })
+        : null;
 
       const durationSeconds =
         prepared.kind === 'audio_in'
@@ -336,7 +344,9 @@ async function ingestMedia(input: {
 
       const row = await withTenant(input.companyId, ({ tx }) =>
         repo(input.companyId, tx).insertMedia({
-          gcsKey: uploaded.gcsKey,
+          // `gcs_key` is NOT NULL, so an unstored item records where it came
+          // from instead. Same sentinel shape the outbound path writes.
+          gcsKey: uploaded?.gcsKey ?? `unstored:${whatsAppProvider()}:${prepared.sha256.slice(0, 16)}`,
           contentType: prepared.contentType,
           bytes: prepared.bytes.byteLength,
           sha256: prepared.sha256,
@@ -371,7 +381,18 @@ async function ingestMedia(input: {
         });
         result.rejected = UNSUPPORTED_MEDIA_REPLY;
       } else {
+        // Download, storage or an unexpected fault: ours to fix, and the worker
+        // still gets an answer. Without this the message is dropped in silence,
+        // which for a voice note is indistinguishable from Jisr being offline.
         log.error('media_ingest_failed', { error });
+        await audit({
+          event: 'media_ingest_failed',
+          severity: 'critical',
+          companyId: input.companyId,
+          actor: `worker:${input.workerId}`,
+          details: { kind: ref.contentType },
+        });
+        result.rejected ??= MEDIA_UNAVAILABLE_REPLY;
       }
     }
   }

@@ -32,6 +32,17 @@ const SNIFF_ALIASES: Record<string, string> = {
   'audio/vnd.wave': 'audio/mpeg',
 };
 
+/**
+ * The media type without its parameters, lowercased.
+ *
+ * Both the sniffer and the carriers hand back parameterised types: file-type
+ * reports a WhatsApp voice note as `audio/ogg; codecs=opus`, which matches no
+ * entry in the allowlist and used to be rejected as the wrong kind of file.
+ */
+function baseType(value: string): string {
+  return value.split(';')[0]!.trim().toLowerCase();
+}
+
 export class MediaRejected extends Error {
   constructor(
     readonly reason: 'type' | 'size' | 'unreadable',
@@ -54,9 +65,10 @@ export async function prepareMedia(input: {
   bytes: Buffer;
   declaredContentType: string;
 }): Promise<PreparedMedia> {
-  const declared = input.declaredContentType.toLowerCase();
+  const declared = baseType(input.declaredContentType);
   const sniffed = await fileTypeFromBuffer(input.bytes);
-  const sniffedType = sniffed ? (SNIFF_ALIASES[sniffed.mime] ?? sniffed.mime) : undefined;
+  const sniffedBase = sniffed ? baseType(sniffed.mime) : undefined;
+  const sniffedType = sniffedBase ? (SNIFF_ALIASES[sniffedBase] ?? sniffedBase) : undefined;
 
   if (!sniffedType) throw new MediaRejected('unreadable', 'could not identify file type');
   if (!ALLOWED.has(sniffedType)) throw new MediaRejected('type', `sniffed type not allowed: ${sniffedType}`);

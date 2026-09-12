@@ -957,8 +957,13 @@ async function suggestActions(companyId: string, caseId: string): Promise<Sugges
     for (const suggestion of result.data.actions) {
       // The suggestion schema carries every param field as optional, so drop the
       // ones this action did not set before the catalog validates it strictly.
+      // Strict Structured Outputs make the model emit every field on every
+      // action, and it fills the unused ones with "" as often as with null, so
+      // an empty string means "not set" here too. Without this the catalog sees
+      // `question`/`staffId`/`note` on a schedule_visit, rejects it as strict,
+      // and every card falls back to the one generic button.
       const params = Object.fromEntries(
-        Object.entries(suggestion.params ?? {}).filter(([, v]) => v !== undefined && v !== null),
+        Object.entries(suggestion.params ?? {}).filter(([, v]) => v !== undefined && v !== null && v !== ''),
       );
       const parsed = CaseAction.safeParse({ action: suggestion.action, params });
       if (!parsed.success) {

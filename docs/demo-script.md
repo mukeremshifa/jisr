@@ -3,13 +3,18 @@
 A storyboard for the features that actually work. Set `DEMO_SLA_MINUTES=3` so an
 escalation lands inside the demo.
 
+Two beats are **not** in this cut. Two-person pay (F3) needs an Auth0 CIBA
+application, so `FEATURE_PAY_TWO_PERSON=false` in `.env` turns it off and
+`pnpm doctor` stays green. Speak-up (F2) needs a second phone rostered in a
+second language. Both features are built, and stay described in `README.md`
+and `docs/security.md`.
+
 **Before you start**
 
-- Two phones joined to the Twilio WhatsApp sandbox, on the roster with different
-  languages (Hindi and Urdu read well on camera).
-- Slack open on the Site B channel, the HR speak-up channel and the dashboard.
-- Print `tmp/stickers.html` and stick R214 on something.
-- One HR account enrolled in Auth0 Guardian, distinct from the supervisor account.
+- `pnpm doctor` green.
+- One phone on WhatsApp, on the roster as `hi`.
+- Slack open on the Site B channel and the dashboard.
+- Print `tmp/stickers.html` (`pnpm stickers R214`) and stick R214 on something.
 
 ---
 
@@ -63,52 +68,9 @@ Tap **Send technician today 4 PM**. The phone gets a voice note:
 
 ---
 
-### 1:05 Speak up, with the identity sealed *(F2)*
+### 1:05 When things break *(C8, and the drills)*
 
-On the second phone, in Urdu: *"میں اپنا نام نہیں بتانا چاہتا۔ سائٹ بی پر ہمیں دوپہر ایک بجے دھوپ میں کام کروایا جا رہا ہے۔"*
-
-The HR speak-up channel shows:
-
-```
-🟠 Speak-up report, identity sealed                     JS-4K8P
-Workers at Site B are being made to work in direct sun around 1 PM.
-🔒 The reporter is hidden. Reply in this thread and I will relay your
-   questions without revealing who they are.
-🔊 Re-voiced summary (synthetic voice)
-```
-
-Show the Site B channel: **nothing**. Show the worker id column in the database:
-**null**.
-
-> "This is a possible midday-break violation, and it may be about that site's
-> supervisor, so it never goes to that site's channel. The name is encrypted
-> under a different key from the one protecting phone numbers, and only the relay
-> task ever decrypts it."
-
----
-
-### 1:25 Pay, and two different people *(F3)*
-
-First phone: *"मेरे अगस्त के 12 घंटे ओवरटाइम सैलरी में नहीं आए"* plus a photo of a
-timesheet.
-
-Supervisor card: **12.00 hours, AED 127.50** computed on the server from the
-roster rate, not read off the photo. Tap **Approve correction**.
-
-The HR phone buzzes: **`JISR 9Q2M 12h OT W-0142 AED127.50`**. Approve it.
-
-The payroll sheet row appears with identical numbers. The worker hears:
-**"आपके अगस्त के 12 ओवरटाइम घंटे मंज़ूर हो गए हैं।"**
-
-> "Two distinct humans, enforced by excluding the first approver by id and by
-> email. And the approval is bound to a hash of the exact numbers. Change the
-> amount after approval and the payment aborts with a critical audit event."
-
----
-
-### 1:45 When things break *(C8, and the drills)*
-
-Run `pnpm tsx scripts/drill-model-outage.ts` on screen:
+Run `pnpm drill:model-outage` on screen:
 
 ```
 1. Normal                      answered by openai
@@ -122,7 +84,7 @@ Run `pnpm tsx scripts/drill-model-outage.ts` on screen:
 
 ---
 
-### 1:55 The board
+### 1:30 The board
 
 Show the dashboard: open cases by site, what's past SLA in the one loud colour,
 and the bridge row, his words in Devanagari beside the English.
@@ -139,7 +101,7 @@ Ask Jisr: **"What's still open at Site B?"** A table renders inline.
 
 | Problem | Say this, then do this |
 |---|---|
-| WhatsApp is slow | "The gateway answered Twilio in under a second. This is Twilio's sandbox." Show the Trigger.dev run. |
+| WhatsApp is slow | "The gateway answered the carrier in under a second." Show the Trigger.dev run. |
 | A voice note doesn't arrive | The text still does. Point at it: the failure is loud, not silent. |
 | Slack doesn't update | Show the dashboard; it reads the same database. |
 | The model is slow | Set `FORCE_LLM_FALLBACK=true` and carry on, that *is* the demo. |

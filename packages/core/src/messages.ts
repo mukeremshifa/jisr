@@ -95,6 +95,15 @@ export const AUDIO_TOO_LONG_REPLY = 'Please split this into shorter messages, un
 export const UNSUPPORTED_MEDIA_REPLY =
   'I can read photos and voice notes only. Please send a photo or speak your message.';
 
+/**
+ * Media that we could not fetch or store: our failure, not the worker's. Kept
+ * distinct from UNSUPPORTED_MEDIA_REPLY so we never tell a worker their voice
+ * note was the wrong kind when the truth is that our side broke. Silence here
+ * is the worst outcome: a worker reporting a hazard by voice must hear back.
+ */
+export const MEDIA_UNAVAILABLE_REPLY =
+  "Something went wrong on our side and I couldn't open that. Please send it again, or type your message.";
+
 export const RATE_LIMITED_REPLY =
   "You've sent a lot of messages. I'll pick these up shortly - your supervisor has been told.";
 
