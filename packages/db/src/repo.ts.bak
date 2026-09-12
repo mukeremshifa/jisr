@@ -619,19 +619,6 @@ export async function findSpeakupCaseByTokenHash(hash: string, tx: DbOrTx = getD
   return row ?? null;
 }
 
-/**
- * Resolves the tenant for a case id alone. A case can carry more than one Slack
- * card -- a critical case is mirrored to the safety channel, and an escalation
- * re-posts to the escalation channel and takes over `slack_message_ts` -- so a
- * click on any copy but the newest finds no row by (channel, ts). The button
- * payload still names the case, and it is re-validated and FGA-checked before
- * anything happens, so this only recovers which tenant to read it in.
- */
-export async function findCaseTenantById(caseId: string, tx: DbOrTx = getDb()): Promise<Case | null> {
-  const [row] = await tx.select().from(cases).where(eq(cases.id, caseId)).limit(1);
-  return row ?? null;
-}
-
 /** Used by the Slack interactivity route, which has a channel id and nothing else. */
 export async function findCaseBySlackMessage(
   channelId: string,

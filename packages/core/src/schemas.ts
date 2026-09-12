@@ -172,6 +172,13 @@ export const IntakeMessagePayload = z
     workerId: z.string().uuid(),
     messageId: z.string().uuid(),
     providerSid: z.string().min(1).max(128),
+    /**
+     * Meta addresses inbound media by id and cannot list it back from the
+     * message later, so the reference travels with the task. Absent on Twilio,
+     * where the media is looked up from the MessageSid instead.
+     */
+    mediaRef: z.string().min(1).max(256).optional(),
+    mediaContentType: z.string().min(1).max(128).optional(),
   })
   .strict();
 export type IntakeMessagePayload = z.infer<typeof IntakeMessagePayload>;

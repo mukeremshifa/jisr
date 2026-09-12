@@ -16,7 +16,9 @@ healthRoutes.get('/readyz', (c) =>
     features,
     wired: {
       database: isConfigured('DATABASE_URL'),
+      whatsappProvider: config.WHATSAPP_PROVIDER,
       twilio: isConfigured('TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN', 'TWILIO_WHATSAPP_FROM'),
+      meta: isConfigured('META_PHONE_NUMBER_ID', 'META_ACCESS_TOKEN', 'META_APP_SECRET'),
       openai: isConfigured('OPENAI_API_KEY'),
       openrouter: isConfigured('OPENROUTER_API_KEY'),
       googleTts: isConfigured('GOOGLE_CLOUD_PROJECT'),

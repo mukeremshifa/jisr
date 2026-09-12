@@ -7,7 +7,6 @@ import { twilioRoutes } from './routes/twilio';
 import { slackRoutes } from './routes/slack';
 import { metaRoutes } from './routes/meta';
 import { startChannelsRuntime } from './channels/runtime';
-import { startSocketMode } from './channels/socket-mode';
 
 /**
  * The Jisr gateway.
@@ -48,9 +47,5 @@ serve({ fetch: app.fetch, port }, (info) => {
 // Channels keeps a persistent connection to CopilotKit Intelligence, which is why
 // Cloud Run runs this service with min-instances 1 and CPU always allocated.
 void startChannelsRuntime();
-
-// Socket Mode carries button clicks and modal submissions when the app has it
-// enabled, in which case Slack never POSTs to /slack/interactivity.
-void startSocketMode();
 
 export { app };

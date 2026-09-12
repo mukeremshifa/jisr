@@ -39,6 +39,14 @@ export interface LlmCallResult<T> {
 
 const OPENAI_TIMEOUT_MS = 20_000;
 
+/**
+ * Models from gpt-5.5 onward reject `temperature` outright: only the default (1)
+ * is accepted, and anything else is a 400. Call sites still ask for 0 to 0.2
+ * because that is the right intent for extraction, so the intent is honoured
+ * where the model supports it and dropped where it would fail the call.
+ */
+const REJECTS_TEMPERATURE = /^(?:gpt-5\.(?:[5-9]|\d{2,})|gpt-[6-9]|gpt-\d{2,})/;
+
 let openai: OpenAI | undefined;
 
 function getOpenAI(): OpenAI {
@@ -106,7 +114,9 @@ async function callOpenAI<TOut>(input: LlmCallInput<TOut>): Promise<LlmCallResul
     client.chat.completions.create({
       model,
       max_completion_tokens: input.maxTokens,
-      ...(input.temperature === undefined ? {} : { temperature: input.temperature }),
+      ...(input.temperature === undefined || REJECTS_TEMPERATURE.test(model)
+        ? {}
+        : { temperature: input.temperature }),
       response_format: zodResponseFormat(input.schema as never, input.schemaName),
       messages: [
         { role: 'system', content: input.system },

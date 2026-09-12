@@ -1,0 +1,37 @@
+[
+  {
+    "user": "user:d3054546-c6f7-4867-aaa7-8a3774708c7c",
+    "relation": "hr",
+    "object": "company:8c43aed9-00a3-46a8-b235-7967a00f0111"
+  },
+  {
+    "user": "user:07a13419-1119-4020-a21c-40209013209f",
+    "relation": "compliance",
+    "object": "company:8c43aed9-00a3-46a8-b235-7967a00f0111"
+  },
+  {
+    "user": "user:b683b24f-d528-4039-a4ac-778bc0ae3941",
+    "relation": "ops_admin",
+    "object": "company:8c43aed9-00a3-46a8-b235-7967a00f0111"
+  },
+  {
+    "user": "company:8c43aed9-00a3-46a8-b235-7967a00f0111",
+    "relation": "company",
+    "object": "site:50ac4d74-7675-4099-a534-06b39530bf4a"
+  },
+  {
+    "user": "company:8c43aed9-00a3-46a8-b235-7967a00f0111",
+    "relation": "company",
+    "object": "site:1b26d581-ccab-41e2-a175-72f47a5655ae"
+  },
+  {
+    "user": "user:2418d20d-e79c-44d3-a043-c3f58fb07fb7",
+    "relation": "supervisor",
+    "object": "site:50ac4d74-7675-4099-a534-06b39530bf4a"
+  },
+  {
+    "user": "user:c3451213-b99d-4e73-ad81-1f14429c81f7",
+    "relation": "supervisor",
+    "object": "site:1b26d581-ccab-41e2-a175-72f47a5655ae"
+  }
+]

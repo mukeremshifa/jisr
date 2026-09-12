@@ -1,21 +1,21 @@
 {
-  "name": "@jisr/gateway",
+  "name": "@jisr/worker",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx watch --env-file-if-exists=../../.env src/index.ts",
-    "start": "tsx src/index.ts"
+    "dev": "trigger dev --env-file ../../.env",
+    "deploy": "trigger deploy"
   },
   "dependencies": {
-    "@copilotkit/channels": "0.9.2",
-    "@hono/node-server": "2.1.1",
+    "@jisr/ai": "workspace:*",
     "@jisr/core": "workspace:*",
     "@jisr/db": "workspace:*",
     "@jisr/integrations": "workspace:*",
-    "@slack/socket-mode": "2.0.7",
     "@trigger.dev/sdk": "4.5.16",
-    "hono": "4.13.7",
     "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "trigger.dev": "4.5.16"
   }
 }

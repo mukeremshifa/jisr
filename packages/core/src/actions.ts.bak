@@ -88,24 +88,7 @@ export const SuggestedActions = z
           .object({
             action: z.enum(SUGGESTABLE_ACTIONS),
             label: z.string().min(1).max(40),
-            // Spelled out rather than `z.record(...).default({})`: strict
-            // Structured Outputs reject both ZodDefault and open-ended records,
-            // which made every suggestion call fail and fall back to the two
-            // generic buttons. These are the only fields SUGGESTABLE_ACTIONS
-            // take; each is re-validated against the action catalog below.
-            // `.nullable()` as well as `.optional()`: strict Structured Outputs
-            // require every property to be present, with null standing in for
-            // "not set".
-            params: z
-              .object({
-                when: z.string().nullable().optional(),
-                question: z.string().nullable().optional(),
-                staffId: z.string().nullable().optional(),
-                note: z.string().nullable().optional(),
-              })
-              .strict()
-              .nullable()
-              .optional(),
+            params: z.record(z.unknown()).default({}),
           })
           .strict(),
       )

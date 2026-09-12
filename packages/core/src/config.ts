@@ -73,6 +73,29 @@ const EnvSchema = z.object({
   TWILIO_WHATSAPP_FROM: optionalString,
   WHATSAPP_NUMBER_DIGITS: optionalString,
 
+  /**
+   * Meta WhatsApp Cloud API, the alternative to Twilio as the WhatsApp carrier.
+   * WHATSAPP_PROVIDER picks which one the gateway and worker use; the rest of
+   * the pipeline never knows the difference.
+   */
+  WHATSAPP_PROVIDER: z.enum(['twilio', 'meta', 'kapso']).default('twilio'),
+  META_PHONE_NUMBER_ID: optionalString,
+  META_ACCESS_TOKEN: optionalString,
+  META_APP_SECRET: optionalString,
+  /** Our own value, echoed back during Meta's webhook verification handshake. */
+  META_VERIFY_TOKEN: optionalString,
+  META_GRAPH_VERSION: z.string().default('v21.0'),
+
+  /**
+   * Kapso: a managed WhatsApp carrier in front of Meta. Its send API is
+   * Meta-shaped, so only the base URL, the auth header and the webhook format
+   * differ from the Meta adapter.
+   */
+  KAPSO_API_KEY: optionalString,
+  KAPSO_PHONE_NUMBER_ID: optionalString,
+  KAPSO_WEBHOOK_SECRET: optionalString,
+  KAPSO_API_BASE: z.string().default('https://api.kapso.ai/meta/whatsapp/v24.0'),
+
   TRIGGER_SECRET_KEY: optionalString,
   TRIGGER_PROJECT_REF: optionalString,
 

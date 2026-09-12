@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "trigger dev",
+    "dev": "trigger dev --env-file ../../.env",
     "deploy": "trigger deploy"
   },
   "dependencies": {
@@ -13,7 +13,8 @@
     "@jisr/db": "workspace:*",
     "@jisr/integrations": "workspace:*",
     "@trigger.dev/sdk": "4.5.16",
-    "zod": "3.25.76"
+    "zod": "3.25.76",
+    "sharp": "0.35.4"
   },
   "devDependencies": {
     "trigger.dev": "4.5.16"

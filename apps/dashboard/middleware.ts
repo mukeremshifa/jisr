@@ -18,7 +18,9 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
 
   const authResponse = await auth0.middleware(request);
-  if (pathname.startsWith('/auth')) return withCsp(request, authResponse);
+  // Auth0 owns redirects and session cookies on these routes. Return its
+  // response unchanged so the callback cookie is preserved by the browser.
+  if (pathname.startsWith('/auth')) return authResponse;
 
   if (!PUBLIC_PATHS.some((prefix) => pathname.startsWith(prefix))) {
     const session = await auth0.getSession(request);
@@ -61,6 +63,13 @@ function withCsp(request: NextRequest, response: NextResponse): NextResponse {
   const headers = new Headers(response.headers);
   headers.set('content-security-policy', csp);
   headers.set('x-nonce', nonce);
+
+  // Auth0 login/logout routes return redirects. Preserve their status and
+  // location instead of replacing them with a new NextResponse.next().
+  if (response.status >= 300 && response.status < 400) {
+    for (const [key, value] of headers) response.headers.set(key, value);
+    return response;
+  }
 
   // Pass the nonce through to the render, so Next can stamp its own scripts.
   const requestHeaders = new Headers(request.headers);

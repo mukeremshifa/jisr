@@ -57,3 +57,11 @@ alter table sealed_identities enable row level security;
 alter table sealed_identities force row level security;
 drop policy if exists sealed_identities_app on sealed_identities;
 create policy sealed_identities_app on sealed_identities using (true) with check (true);
+
+-- System events that happen before any company is known (a bad webhook
+-- signature, an unknown number) carry no company_id. Without this policy the
+-- tenant_isolation check rejects them and they only ever reach the logs.
+drop policy if exists audit_system_events on audit_log;
+create policy audit_system_events on audit_log
+  for insert
+  with check (company_id is null);

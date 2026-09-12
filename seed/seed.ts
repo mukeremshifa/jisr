@@ -11,6 +11,7 @@ import {
   phoneHmac,
   sites,
   staff,
+  withTenant,
   workers,
 } from '@jisr/db';
 
@@ -71,16 +72,16 @@ async function main(): Promise<void> {
   const db = getDb();
 
   const companyName = config.COMPANY_NAME;
-  const [company] = await db
-    .insert(companies)
-    .values({ name: companyName })
-    .onConflictDoNothing()
-    .returning();
-
-  const companyRow =
-    company ?? (await db.select().from(companies).where(eq(companies.name, companyName)).limit(1))[0];
+  // Find-or-create: companies.name has no unique constraint, so an insert with
+  // onConflictDoNothing would create a duplicate company on every re-run.
+  const existing = (await db.select().from(companies).where(eq(companies.name, companyName)).limit(1))[0];
+  const companyRow = existing ?? (await db.insert(companies).values({ name: companyName }).returning())[0];
   if (!companyRow) throw new Error('could not create or find the company');
   const companyId = companyRow.id;
+
+  // Everything below touches tables with FORCE ROW LEVEL SECURITY, so it must run
+  // inside withTenant() — otherwise Postgres rejects every insert.
+  await withTenant(companyId, async ({ tx }) => {
 
   // Site B is geofenced on the demo venue so a live location pin matches it.
   const venueLat = Number(config.VENUE_LAT ?? '25.2048');
@@ -110,9 +111,9 @@ async function main(): Promise<void> {
   ];
 
   for (const row of siteRows) {
-    await db.insert(sites).values(row).onConflictDoNothing();
+    await tx.insert(sites).values(row).onConflictDoNothing();
   }
-  const allSites = await db.select().from(sites).where(eq(sites.companyId, companyId));
+  const allSites = await tx.select().from(sites).where(eq(sites.companyId, companyId));
   const siteByCode = new Map(allSites.map((s) => [s.code, s]));
 
   const staffRows = [
@@ -123,7 +124,7 @@ async function main(): Promise<void> {
     { email: 'ops@example.com', displayName: 'Ops Admin' },
   ];
   for (const row of staffRows) {
-    await db.insert(staff).values({ companyId, ...row }).onConflictDoNothing();
+    await tx.insert(staff).values({ companyId, ...row }).onConflictDoNothing();
   }
 
   const assetRows = [
@@ -134,7 +135,7 @@ async function main(): Promise<void> {
   ];
   for (const row of assetRows) {
     if (!isValidAssetCode(row.code)) throw new Error(`invalid asset code: ${row.code}`);
-    await db
+    await tx
       .insert(assets)
       .values({
         companyId,
@@ -149,7 +150,7 @@ async function main(): Promise<void> {
   const roster = await readRoster();
   let index = 1;
   for (const row of roster) {
-    await db
+    await tx
       .insert(workers)
       .values({
         companyId,
@@ -167,7 +168,7 @@ async function main(): Promise<void> {
     index++;
   }
 
-  const staffOut = await db.select().from(staff).where(eq(staff.companyId, companyId));
+  const staffOut = await tx.select().from(staff).where(eq(staff.companyId, companyId));
 
   process.stdout.write('\nSeeded.\n\n');
   process.stdout.write(`DEFAULT_COMPANY_ID=${companyId}\n\n`);
@@ -177,6 +178,7 @@ async function main(): Promise<void> {
   for (const row of staffOut) process.stdout.write(`  ${row.id}  ${row.email}\n`);
   process.stdout.write('\nNext: set DEFAULT_COMPANY_ID, fill in fga/tuples.json, and set each site\'s\n');
   process.stdout.write('Slack channel id (SEED_SLACK_CHANNEL_SITE_A/B, or update the sites table).\n');
+  });
 }
 
 main()

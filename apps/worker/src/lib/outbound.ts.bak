@@ -7,7 +7,7 @@ import {
   sanitizeText,
 } from '@jisr/core';
 import { decryptField, repo, withTenant } from '@jisr/db';
-import { sendWhatsAppMessage, signedUrl, uploadMedia } from '@jisr/integrations';
+import { sendWhatsApp, signedUrl, uploadMedia } from '@jisr/integrations';
 
 /**
  * Everything Jisr says to a worker goes through here.
@@ -83,36 +83,16 @@ export async function sendToWorker(input: SendToWorkerInput): Promise<SendResult
 
   // The one place a phone number is decrypted.
   const phone = decryptField(Buffer.from(worker.phoneEnc), 'data');
-  // Twilio only: Meta reports delivery on its own webhook and takes no callback
-  // URL on the send.
-  const statusCallbackUrl =
-    config.WHATSAPP_PROVIDER === 'twilio' && config.PUBLIC_GATEWAY_URL
-      ? `${config.PUBLIC_GATEWAY_URL.replace(/\/+$/, '')}/webhooks/twilio/status`
-      : undefined;
+  const statusCallbackUrl = config.PUBLIC_GATEWAY_URL
+    ? `${config.PUBLIC_GATEWAY_URL.replace(/\/+$/, '')}/webhooks/twilio/status`
+    : undefined;
 
-  // The WhatsApp sandbox rejects free-form sends (error 21654: ContentSid
-  // Required), which would otherwise abort intake before the case is ever
-  // created. Delivery to the worker is best-effort: a send failure is recorded
-  // on the message row and in the logs, and the case still reaches a human.
-  let sent: { sid: string | null; status: string };
-  try {
-    sent = await sendWhatsAppMessage({
-      toE164: phone,
-      body: text,
-      ...(mediaUrl ? { mediaUrl } : {}),
-      ...(statusCallbackUrl ? { statusCallbackUrl } : {}),
-    });
-  } catch (error) {
-    log.error('worker_message_send_failed', {
-      workerRef: worker.publicRef,
-      language,
-      caseId: input.caseId ?? null,
-      error,
-    });
-    // null, not '': provider_sid carries a unique index, so repeated failures
-    // must not collide with each other.
-    sent = { sid: null, status: 'failed' };
-  }
+  const sent = await sendWhatsApp({
+    toE164: phone,
+    body: text,
+    ...(mediaUrl ? { mediaUrl } : {}),
+    ...(statusCallbackUrl ? { statusCallbackUrl } : {}),
+  });
 
   await withTenant(input.companyId, ({ tx }) =>
     repo(input.companyId, tx).insertMessage({

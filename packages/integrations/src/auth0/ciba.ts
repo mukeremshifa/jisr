@@ -43,6 +43,15 @@ function requireCiba(): { domain: string; clientId: string; clientSecret: string
   };
 }
 
+/**
+ * Auth0's /bc-authorize only accepts `login_hint` in the `iss_sub` format: the
+ * approver's Auth0 user id (e.g. `auth0|abc123`), never an email address.
+ */
+export function loginHintFor(auth0UserId: string): string {
+  const { domain } = requireCiba();
+  return JSON.stringify({ format: 'iss_sub', iss: `https://${domain}/`, sub: auth0UserId });
+}
+
 export function isCibaConfigured(): boolean {
   return Boolean(config.AUTH0_DOMAIN && config.AUTH0_CIBA_CLIENT_ID && config.AUTH0_CIBA_CLIENT_SECRET);
 }

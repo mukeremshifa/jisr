@@ -79,6 +79,12 @@ pnpm dev:worker               # Trigger.dev tasks
 pnpm dev:dashboard            # Next.js on :3000
 ```
 
+Every script loads the root `.env` itself (`--env-file-if-exists`), and
+`pnpm dev:dashboard` copies it to `apps/dashboard/.env.local` first, because
+Next.js only reads env files from its own folder. The gateway's health check is
+`/healthz`. The failure drills run with `pnpm drill:model-outage`,
+`pnpm drill:sla-timeout` and `pnpm drill:webhook-replay`.
+
 **The minimum to see a voice note become a Slack card:** `DATABASE_URL`, the
 three 32-byte crypto keys (`openssl rand -base64 32` each), `OPENAI_API_KEY`,
 the four `TWILIO_*` values, `TRIGGER_SECRET_KEY`, `GCS_BUCKET`,

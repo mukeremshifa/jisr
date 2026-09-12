@@ -1,6 +1,12 @@
 import { Slack, slack, type SlackAdapter } from '@copilotkit/channels/slack';
 import { config, log } from '@jisr/core';
-import { setSlackTransport, type Block, type MessageRef, type SlackTransport } from '@jisr/integrations';
+import {
+  setSlackTransport,
+  slackWebApiTransport,
+  type Block,
+  type MessageRef,
+  type SlackTransport,
+} from '@jisr/integrations';
 
 /**
  * CopilotKit Channels, the manager surface.
@@ -44,10 +50,11 @@ function channelsTransport(slackAdapter: SlackAdapter): SlackTransport {
       return { channelId: ref.channelId, messageTs: String(posted.id) };
     },
 
-    async openModal() {
-      // Modals need a live interaction trigger, which arrives on the signed HTTP
-      // route. That route uses the Web API transport for this one call.
-      throw new Error('openModal is served by the Slack Web API transport');
+    async openModal(triggerId, view) {
+      // Channels has no modal primitive, and a trigger_id is only valid for a few
+      // seconds, so this one call goes straight out over the Slack Web API. Under
+      // Socket Mode there is no HTTP route to fall back to.
+      await slackWebApiTransport.openModal(triggerId, view);
     },
 
     async lookupUser() {

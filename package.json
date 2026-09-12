@@ -15,9 +15,12 @@
     "dev:worker": "pnpm --filter @jisr/worker dev",
     "db:generate": "pnpm --filter @jisr/db generate",
     "db:migrate": "pnpm --filter @jisr/db migrate",
-    "seed": "tsx seed/seed.ts",
-    "stickers": "tsx scripts/generate-stickers.ts",
-    "language-test": "tsx scripts/language-test.ts"
+    "seed": "tsx --env-file-if-exists=.env seed/seed.ts",
+    "stickers": "tsx --env-file-if-exists=.env scripts/generate-stickers.ts",
+    "language-test": "tsx --env-file-if-exists=.env scripts/language-test.ts",
+    "drill:model-outage": "tsx --env-file-if-exists=.env scripts/drill-model-outage.ts",
+    "drill:sla-timeout": "tsx --env-file-if-exists=.env scripts/drill-sla-timeout.ts",
+    "drill:webhook-replay": "tsx --env-file-if-exists=.env scripts/drill-webhook-replay.ts"
   },
   "devDependencies": {
     "@types/node": "22.20.2",

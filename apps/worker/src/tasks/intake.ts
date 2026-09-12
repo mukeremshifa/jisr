@@ -36,11 +36,12 @@ import {
 import { audit, repo, withTenant } from '@jisr/db';
 import {
   MediaRejected,
-  downloadTwilioMedia,
+  downloadWhatsAppMedia,
   estimateAudioSeconds,
   listMessageMedia,
   prepareMedia,
   uploadMedia,
+  whatsAppProvider,
 } from '@jisr/integrations';
 import { chargeAudioSeconds, chargeTokens, isBudgetTripped } from '../lib/budget';
 import { trigger, validatedTask } from '../lib/task-kit';
@@ -62,7 +63,7 @@ export const intakeMessage = validatedTask({
   maxDuration: 300,
   retry: { maxAttempts: 3 },
   run: async (payload) => {
-    const { companyId, workerId, messageId, providerSid } = payload;
+    const { companyId, workerId, messageId, providerSid, mediaRef, mediaContentType } = payload;
 
     const loaded = await withTenant(companyId, async ({ tx }) => {
       const r = repo(companyId, tx);
@@ -95,7 +96,14 @@ export const intakeMessage = validatedTask({
     }
 
     // ---------------------------------------------------------- media ingest
-    const ingested = await ingestMedia({ companyId, workerId, messageId, providerSid });
+    const ingested = await ingestMedia({
+      companyId,
+      workerId,
+      messageId,
+      providerSid,
+      mediaRef,
+      mediaContentType,
+    });
     if (ingested.rejected) {
       await sendToWorker({ companyId, workerId, textOriginal: ingested.rejected, language });
       return { handled: true as const, reason: 'media_rejected' };
@@ -280,22 +288,37 @@ async function ingestMedia(input: {
   workerId: string;
   messageId: string;
   providerSid: string;
+  mediaRef?: string;
+  mediaContentType?: string;
 }): Promise<IngestedMedia> {
   const result: IngestedMedia = { rejected: null, imageMediaId: null, audio: null };
 
-  let refs: Awaited<ReturnType<typeof listMessageMedia>>;
-  try {
-    refs = await listMessageMedia(input.providerSid);
-  } catch (error) {
-    log.warn('media_list_failed', { providerSid: input.providerSid, error });
+  // Twilio lists media from the MessageSid; Meta cannot, so the gateway passes
+  // the media id through on the payload instead.
+  let refs: Array<{ ref: string; contentType: string }>;
+  if (input.mediaRef) {
+    refs = [{ ref: input.mediaRef, contentType: input.mediaContentType ?? 'application/octet-stream' }];
+  } else if (whatsAppProvider() !== 'twilio') {
+    // The JSON carriers put media on the webhook payload, so no mediaRef means
+    // there was none. Only Twilio has a list-media call to fall back on.
     return result;
+  } else {
+    try {
+      refs = (await listMessageMedia(input.providerSid)).map((m) => ({
+        ref: m.url,
+        contentType: m.contentType,
+      }));
+    } catch (error) {
+      log.warn('media_list_failed', { providerSid: input.providerSid, error });
+      return result;
+    }
   }
   if (refs.length === 0) return result;
 
   for (const ref of refs.slice(0, 2)) {
     const maxBytes = ref.contentType.startsWith('image/') ? config.CAP_IMAGE_BYTES : config.CAP_AUDIO_BYTES;
     try {
-      const downloaded = await downloadTwilioMedia(ref.url, maxBytes);
+      const downloaded = await downloadWhatsAppMedia(ref.ref, maxBytes);
       const prepared = await prepareMedia({
         bytes: downloaded.bytes,
         declaredContentType: downloaded.declaredContentType,

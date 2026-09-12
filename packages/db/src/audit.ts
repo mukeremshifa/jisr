@@ -1,5 +1,6 @@
 import { log, type SecurityEvent } from '@jisr/core';
 import { getDb, type DbOrTx } from './client';
+import { withTenant } from './tenant';
 import { auditLog } from './schema';
 
 /**
@@ -38,7 +39,11 @@ export async function audit(input: AuditInput, tx?: DbOrTx): Promise<void> {
     // Resolved inside the try on purpose: as a default argument, `getDb()` runs
     // before this block and a missing DATABASE_URL would take down the very
     // request this call is describing.
-    await (tx ?? getDb()).insert(auditLog).values(row);
+    // audit_log has FORCE ROW LEVEL SECURITY: outside a tenant transaction the
+    // insert must run inside withTenant, or Postgres silently refuses the row.
+    if (tx) await tx.insert(auditLog).values(row);
+    else if (row.companyId) await withTenant(row.companyId, ({ tx: t }) => t.insert(auditLog).values(row));
+    else await getDb().insert(auditLog).values(row);
   } catch (error) {
     // An audit write must never take down the request it is describing, but it
     // must be loud when it fails.

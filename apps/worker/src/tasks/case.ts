@@ -955,7 +955,12 @@ async function suggestActions(companyId: string, caseId: string): Promise<Sugges
 
     const validated: SuggestedButton[] = [];
     for (const suggestion of result.data.actions) {
-      const parsed = CaseAction.safeParse({ action: suggestion.action, params: suggestion.params });
+      // The suggestion schema carries every param field as optional, so drop the
+      // ones this action did not set before the catalog validates it strictly.
+      const params = Object.fromEntries(
+        Object.entries(suggestion.params ?? {}).filter(([, v]) => v !== undefined && v !== null),
+      );
+      const parsed = CaseAction.safeParse({ action: suggestion.action, params });
       if (!parsed.success) {
         log.info('suggested_action_rejected', { action: suggestion.action });
         continue;

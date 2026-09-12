@@ -113,6 +113,9 @@ importers:
       '@jisr/integrations':
         specifier: workspace:*
         version: link:../../packages/integrations
+      '@slack/socket-mode':
+        specifier: 2.0.7
+        version: 2.0.7
       '@trigger.dev/sdk':
         specifier: 4.5.16
         version: 4.5.16(ai@6.0.280(zod@3.25.76))(react@19.3.0)(zod@3.25.76)
@@ -140,6 +143,9 @@ importers:
       '@trigger.dev/sdk':
         specifier: 4.5.16
         version: 4.5.16(ai@6.0.280(zod@3.25.76))(react@19.3.0)(zod@3.25.76)
+      sharp:
+        specifier: 0.35.4
+        version: 0.35.4(@types/node@22.20.2)
       zod:
         specifier: 3.25.76
         version: 3.25.76

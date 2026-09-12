@@ -1,4 +1,10 @@
+import { existsSync } from 'node:fs';
 import { defineConfig } from '@trigger.dev/sdk';
+
+// `trigger dev` evaluates this file before it reads --env-file, so load the
+// repo's root .env here to make TRIGGER_PROJECT_REF available. A no-op in
+// CI and in deployed images, where the file does not exist.
+if (existsSync('../../.env')) process.loadEnvFile('../../.env');
 
 /**
  * Trigger.dev v4. Every slow or flaky step in Jisr runs here, so it gets retries,

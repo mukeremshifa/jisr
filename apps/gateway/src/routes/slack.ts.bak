@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { wait, tasks } from '@trigger.dev/sdk';
 import { z } from 'zod';
 import { CaseAction, log, sanitizeText } from '@jisr/core';
-import { audit, findCaseBySlackMessage, findCaseTenantById, repo, withTenant } from '@jisr/db';
+import { audit, findCaseBySlackMessage, repo, withTenant } from '@jisr/db';
 import {
   buildEditHoursModal,
   buildRejectModal,
@@ -115,7 +115,7 @@ slackRoutes.post('/slack/commands', async (c) => {
 
 // ---------------------------------------------------------------------------
 
-export interface SlackInteraction {
+interface SlackInteraction {
   type: string;
   user?: { id?: string };
   trigger_id?: string;
@@ -126,11 +126,7 @@ export interface SlackInteraction {
   view?: { callback_id?: string; private_metadata?: string; state?: { values?: Record<string, unknown> } };
 }
 
-/**
- * Dispatches one decoded interaction payload. Shared by the signed HTTP route and
- * the Socket Mode listener, which receive byte-identical payloads.
- */
-export async function handleInteraction(payload: SlackInteraction): Promise<void> {
+async function handleInteraction(payload: SlackInteraction): Promise<void> {
   if (payload.type === 'block_actions') return handleBlockAction(payload);
   if (payload.type === 'view_submission') return handleViewSubmission(payload);
 }
@@ -376,12 +372,8 @@ async function resolveActor(input: {
   }
 
   // The card is authoritative when we have it; a modal submission falls back to
-  // the tenant its private_metadata carried, and a click on a card that is no
-  // longer the one of record (a safety mirror, or a site card a later escalation
-  // superseded) falls back to the case the button names. The action is still
-  // re-validated against the catalog and FGA-checked below.
-  const byId = !byCard && !input.companyId ? await findCaseTenantById(input.caseId) : null;
-  const companyId = byCard?.companyId ?? input.companyId ?? byId?.companyId;
+  // the tenant its private_metadata carried.
+  const companyId = byCard?.companyId ?? input.companyId;
   if (!companyId) {
     log.warn('slack_action_unresolvable', { caseId: input.caseId });
     return null;

@@ -41,7 +41,11 @@ export const getActor = cache(async (): Promise<Actor | null> => {
     const email = typeof session?.user?.email === 'string' ? session.user.email : null;
     if (!email) return null;
     const all = await r.allStaff();
-    return all.find((row) => row.email.toLowerCase() === email.toLowerCase()) ?? null;
+    const match = all.find((row) => row.email.toLowerCase() === email.toLowerCase()) ?? null;
+    // Link the Auth0 subject so later sign-ins match by sub, and so CIBA can
+    // address this person's phone (Auth0 needs the user id, not the email).
+    if (match && !match.auth0Sub) await r.linkStaffAuth0Sub(match.id, sub);
+    return match;
   });
 
   if (!staff) return null;

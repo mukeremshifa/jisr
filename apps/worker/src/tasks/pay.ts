@@ -313,10 +313,19 @@ export const paySupervisorApproved = validatedTask({
       amountFils: updated.amountFils,
     });
 
+    if (!approver.auth0Sub) {
+      await slackThreadNote(
+        companyId,
+        caseId,
+        `${approver.displayName} has no Auth0 account linked yet (they need to sign in to the dashboard once). This correction stays pending. Nothing has been paid.`,
+      );
+      return { approved: false as const, reason: 'approver has no auth0 user id' };
+    }
+
     let request: Awaited<ReturnType<typeof ciba.requestApproval>>;
     try {
       request = await ciba.requestApproval({
-        loginHint: approver.email,
+        loginHint: ciba.loginHintFor(approver.auth0Sub),
         bindingMessage: message,
         authorizationDetails: ciba.payrollAuthorizationDetails({
           casePublicId: ctx.case.publicId,
@@ -605,7 +614,7 @@ async function readEvidence(
 async function chooseHrApprover(
   companyId: string,
   supervisorStaffId: string,
-): Promise<{ id: string; email: string; displayName: string } | null> {
+): Promise<{ id: string; email: string; displayName: string; auth0Sub: string | null } | null> {
   const candidates = await withTenant(companyId, async ({ tx }) => {
     const r = repo(companyId, tx);
     const supervisor = await r.staffById(supervisorStaffId);
@@ -622,7 +631,9 @@ async function chooseHrApprover(
       relation: 'hr',
       object: fga.companyRef(companyId),
     });
-    if (isHr) return { id: candidate.id, email: candidate.email, displayName: candidate.displayName };
+    if (isHr) {
+      return { id: candidate.id, email: candidate.email, displayName: candidate.displayName, auth0Sub: candidate.auth0Sub ?? null };
+    }
   }
   return null;
 }
