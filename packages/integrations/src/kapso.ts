@@ -4,7 +4,7 @@ import type { DownloadedMedia, SendResult, SendWhatsAppInput, SignatureCheck } f
 import type { MetaInboundMessage, MetaStatusUpdate } from './meta';
 
 /**
- * Kapso — a managed WhatsApp carrier sitting in front of Meta.
+ * Kapso, a managed WhatsApp carrier sitting in front of Meta.
  *
  * The send API is deliberately Meta-shaped (`messaging_product`, `type`, `text`),
  * so the request bodies here match the Meta adapter's. Three things differ:
@@ -113,7 +113,7 @@ export async function sendWhatsAppKapso(input: SendWhatsAppInput): Promise<SendR
  * Uploads audio bytes to Kapso's media endpoint and returns the media id.
  *
  * Sending a voice note by id rather than by link is what makes WhatsApp render
- * it as a voice note — a mic icon and inline playback — instead of a file with
+ * it as a voice note, with a mic icon and inline playback, instead of a file with
  * a download arrow. It also means outbound audio needs no public URL, and so no
  * object storage at all.
  *
@@ -150,7 +150,7 @@ export async function uploadKapsoMedia(input: {
 
 /**
  * Downloads one inbound media item from the `media_url` Kapso put on the
- * message. The URL is pre-signed, so it carries no credentials of ours — which
+ * message. The URL is pre-signed, so it carries no credentials of ours, which
  * is also why it is treated as untrusted and pinned to Kapso's own hosts.
  */
 export async function downloadKapsoMedia(mediaUrl: string, maxBytes: number): Promise<DownloadedMedia> {

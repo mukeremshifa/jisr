@@ -7,7 +7,7 @@ import { NotConfiguredError, config, features, log } from '@jisr/core';
  *
  * We call `tools/list` first and match on the names the server actually returns,
  * rather than hard-coding tool names that may have changed. If nothing matches,
- * we say so and skip — never a silent no-op that looks like a success.
+ * we say so and skip. Never a silent no-op that looks like a success.
  */
 
 let client: Client | undefined;
@@ -66,7 +66,7 @@ export async function createCaseTask(input: {
     const result = await mcp.callTool({
       name: tool,
       arguments: {
-        title: `${input.casePublicId} — ${input.title}`.slice(0, 120),
+        title: `${input.casePublicId}: ${input.title}`.slice(0, 120),
         description: `${input.summaryEn}\n\n${input.dashboardUrl ?? ''}`.trim(),
       },
     });
@@ -79,7 +79,7 @@ export async function createCaseTask(input: {
 
 /**
  * F3 execution: append the approved adjustment to the payroll sheet. Idempotent
- * by `adjustmentId` — the caller passes the same id on every retry, and the row
+ * by `adjustmentId`. The caller passes the same id on every retry, and the row
  * carries it so a duplicate is visible rather than silent.
  */
 export async function appendPayrollRow(input: {

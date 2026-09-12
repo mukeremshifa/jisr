@@ -19,7 +19,7 @@ import { awaitDecisions } from './case';
 import { slaDueAt } from '../lib/case-context';
 
 /**
- * F2 — speak-up mode.
+ * F2. Speak-up mode.
  *
  * The report reaches people who can act on it; the reporter's identity does not.
  *
@@ -114,10 +114,10 @@ export const speakupReport = validatedTask({
       summaryEnRedacted = result.data.summaryEnRedacted;
       transcriptRedacted = result.data.transcriptOriginalRedacted;
     } catch (error) {
-      // If the model will not answer, the report still reaches HR — but only the
+      // If the model will not answer, the report still reaches HR, but only the
       // regex-masked version, and marked as such. We never post the raw text.
       log.error('speakup_redaction_failed', { error });
-      summaryEnRedacted = `(automatic redaction unavailable — this summary is masked by pattern only)\n${payload.summaryEn}`;
+      summaryEnRedacted = `(automatic redaction unavailable, this summary is masked by pattern only)\n${payload.summaryEn}`;
     }
 
     // Belt and braces: the regex pass cannot be talked out of matching.
@@ -230,7 +230,7 @@ export const speakupAwait = validatedTask({
 });
 
 /**
- * Step 7 — the reporter's answer to an HR question. Redacted and re-voiced on
+ * Step 7. The reporter's answer to an HR question. Redacted and re-voiced on
  * the way out, exactly like the first report.
  */
 export const speakupFollowUp = validatedTask({

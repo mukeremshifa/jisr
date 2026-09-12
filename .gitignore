@@ -5,8 +5,10 @@ out/
 tmp/
 coverage/
 *.tsbuildinfo
+*.bak
+.env.bak.*
 
-# Secrets — never commit anything but .env.example
+# Secrets. Never commit anything but .env.example
 .env
 .env.*
 !.env.example

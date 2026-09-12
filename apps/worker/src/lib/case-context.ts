@@ -30,7 +30,7 @@ export async function loadCaseContext(companyId: string, caseId: string): Promis
   });
 }
 
-/** SLA due time. Minutes in the demo, hours in production — one env value. */
+/** SLA due time. Minutes in the demo, hours in production, from one env value. */
 export function slaDueAt(severity: CaseSeverity, from: Date = new Date()): Date {
   const base = config.DEMO_SLA_MINUTES;
   // Critical cases get a quarter of the window, floored at one minute.

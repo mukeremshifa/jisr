@@ -2,7 +2,7 @@ import { createHmac } from 'node:crypto';
 import { config } from '@jisr/core';
 
 /**
- * Failure drill 2 — a dropped webhook, and Twilio's retry.
+ * Failure drill 2. A dropped webhook, and Twilio's retry.
  *
  * Posts the same signed webhook body twice. The first creates a message and
  * enqueues intake; the second is deduplicated on MessageSid and does nothing.

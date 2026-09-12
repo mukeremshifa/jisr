@@ -830,7 +830,7 @@ async function onSlaBreach(companyId: string, caseId: string): Promise<void> {
   }
 }
 
-/** C1 step 10 — a "no" gets exactly one correction round. */
+/** C1 step 10. A "no" gets exactly one correction round. */
 async function handleConfirmation(input: {
   companyId: string;
   workerId: string;
@@ -911,7 +911,7 @@ async function continueCase(input: {
 }
 
 /**
- * C2 — the model suggests two or three actions from the catalog. Every suggestion
+ * C2. The model suggests two or three actions from the catalog. Every suggestion
  * is parsed against the catalog schema here; anything that fails is dropped, not
  * repaired. "Reply in my own words" is always added by us.
  */

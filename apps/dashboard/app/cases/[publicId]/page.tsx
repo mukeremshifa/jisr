@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 /**
  * One case, with the bridge row on every message: the worker's own words beside
  * the English. A speak-up case shows the sealed badge and the synthetic audio
- * only — never a name, a number, or the reporter's own voice.
+ * only. Never a name, a number, or the reporter's own voice.
  */
 export default async function CasePage({ params }: { params: Promise<{ publicId: string }> }) {
   const actor = await getActor();
@@ -35,7 +35,7 @@ export default async function CasePage({ params }: { params: Promise<{ publicId:
 
         <div className="flex flex-wrap gap-[4px]">
           <Badge>{header.status.replace(/_/g, ' ')}</Badge>
-          {header.isSpeakup ? <Badge>speak-up · sealed</Badge> : null}
+          {header.isSpeakup ? <Badge>speak-up, sealed</Badge> : null}
           {header.pastSla ? <Badge tone="act">past SLA</Badge> : null}
           {!header.confirmedByWorker && !header.isSpeakup ? <Badge tone="outline">unconfirmed</Badge> : null}
           {header.needsReview ? <Badge tone="outline">needs review</Badge> : null}

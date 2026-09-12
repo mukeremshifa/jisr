@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { ModelUnavailableError, NotConfiguredError, config, log, models } from '@jisr/core';
 
 /**
- * C8 — one model call, two providers, strict validation.
+ * C8. One model call, two providers, strict validation.
  *
  *   OpenAI (20s timeout, one retry)
  *     -> on error or timeout: OpenRouter, walking OPENROUTER_FALLBACK_MODELS in order

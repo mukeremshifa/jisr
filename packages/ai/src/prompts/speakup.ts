@@ -2,7 +2,7 @@ import { Redaction, wrapUntrusted } from '@jisr/core';
 import { PLAIN_LANGUAGE_RULE, systemPrompt } from './shared';
 
 /**
- * F2 step 3 — redaction.
+ * F2 step 3. Redaction.
  *
  * This pass removes what a person could be recognised by. A regex pass runs
  * afterwards for Emirates ID numbers, IBANs and phone numbers; this one handles

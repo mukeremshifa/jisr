@@ -3,7 +3,7 @@ import { NotConfiguredError, config, log } from '@jisr/core';
 import type { Block } from './blocks';
 
 /**
- * Slack has exactly two entry points for case traffic — `notifyManagers` and
+ * Slack has exactly two entry points for case traffic, `notifyManagers` and
  * `updateCaseCard` (see `managerChannel.ts`). This file is the transport those
  * two sit on, so swapping Channels for the Web API never touches a caller.
  */

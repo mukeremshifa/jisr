@@ -20,7 +20,7 @@ import { trigger, validatedTask } from '../lib/task-kit';
 import { outboundQueue } from '../queues';
 
 /**
- * C4 — broadcasts.
+ * C4. Broadcasts.
  *
  * One English message becomes one voice note per worker, in that worker's own
  * language. Nothing is sent until a human sees every translation and presses

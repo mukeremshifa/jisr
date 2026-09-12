@@ -85,7 +85,7 @@ function PayTable({
               <td className="whitespace-nowrap">{row.hours}</td>
               <td className="whitespace-nowrap">AED {row.amountAed}</td>
               <td className="whitespace-nowrap text-[--color-ink-2]">
-                {row.proposedBy ?? '—'}
+                {row.proposedBy ?? '–'}
                 {row.approvedBy ? <> {'→'} {row.approvedBy}</> : null}
               </td>
               <td className="mono whitespace-nowrap text-[--color-ink-3]">{row.hashShort}</td>

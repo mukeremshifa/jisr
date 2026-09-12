@@ -5,7 +5,7 @@ import { getActor } from '@/lib/actor';
 import { getCase, listBroadcasts, listCases, listSites } from '@/lib/data';
 
 /**
- * "Ask Jisr" — the dashboard copilot.
+ * "Ask Jisr", the dashboard copilot.
  *
  * Every tool below runs **as the signed-in user**: it resolves the actor from
  * the session and goes through the same FGA-checked data layer the pages use.
@@ -135,7 +135,7 @@ const jisrTools = [
     {
       name: 'draftBroadcast',
       description:
-        'Fill the broadcast composer with a draft. This never sends anything — a person still has to review every translation and press Send.',
+        'Fill the broadcast composer with a draft. This never sends anything. A person still has to review every translation and press Send.',
       parameters: [
         { name: 'text', type: 'string', description: 'The message in English', required: true },
         { name: 'siteName', type: 'string', description: 'Which site it is for', required: false },

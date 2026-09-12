@@ -2,7 +2,7 @@
  * The language matrix. One entry per language Jisr speaks.
  *
  * `ttsProvider` decides which speech engine renders the voice note. The humans
- * fill this in by listening to `scripts/language-test.ts` output — the values
+ * fill this in by listening to `scripts/language-test.ts` output. The values
  * below are the starting point, not a claim about quality.
  *
  * `transcriptionHint` is passed to the transcription model as the expected

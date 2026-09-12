@@ -1,7 +1,7 @@
 import { stripInvisible } from './invisible';
 
 /**
- * F1 — tap-to-report. A sticker encodes a wa.me link that pre-fills `JISR-<CODE>`
+ * F1. Tap-to-report. A sticker encodes a wa.me link that pre-fills `JISR-<CODE>`
  * so the worker only presses send. The code adds *context*, never access.
  */
 

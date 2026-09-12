@@ -5,7 +5,7 @@ import { composeBroadcast } from './actions';
 
 /**
  * The composer never sends. It asks the agent for a translation preview, which
- * is posted to Slack with a Send button — so the thing that goes out is the
+ * is posted to Slack with a Send button, so the thing that goes out is the
  * thing a person read.
  */
 export function BroadcastComposer({ sites }: { sites: Array<{ id: string; name: string }> }) {

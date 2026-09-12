@@ -4,7 +4,7 @@ import { NotConfiguredError, config, log } from '@jisr/core';
 /**
  * C5 grounding. Search is restricted to an allowlist of official domains, and the
  * allowlist is enforced twice: in the request, and again on every result we keep.
- * Results are untrusted content — the caller wraps them before they reach a model.
+ * Results are untrusted content. The caller wraps them before they reach a model.
  */
 
 let client: Exa | undefined;

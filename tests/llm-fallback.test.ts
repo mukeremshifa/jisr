@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 
 /**
- * C8 — the fallback chain, exercised with a stubbed OpenRouter endpoint.
+ * C8. The fallback chain, exercised with a stubbed OpenRouter endpoint.
  *
  * These tests inject failures rather than mocking the whole function: the
  * request really is built, the response really is parsed, and the Zod schema

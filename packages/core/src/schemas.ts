@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-/** Shared contracts. Changing anything here is a cross-lane change — note it in docs/decisions.md. */
+/** Shared contracts. Changing anything here is a cross-lane change, so note it in docs/decisions.md. */
 
 export const CaseCategory = z.enum([
   'maintenance',

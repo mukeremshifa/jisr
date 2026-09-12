@@ -29,7 +29,7 @@ export interface GeoMatch {
 
 /**
  * Nearest site whose radius contains the pin. Outside every radius returns null,
- * and the caller asks the worker which site — we never guess a location onto a case.
+ * and the caller asks the worker which site. We never guess a location onto a case.
  */
 export function matchSite(lat: number, lng: number, sites: readonly SiteGeo[]): GeoMatch | null {
   let best: GeoMatch | null = null;

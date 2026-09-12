@@ -42,6 +42,6 @@ export async function composeBroadcast(formData: FormData): Promise<{ ok: boolea
 
   return {
     ok: true,
-    message: 'Translating now. The preview will appear in Slack — press Send there when it looks right.',
+    message: 'Translating now. The preview will appear in Slack. Press Send there when it looks right.',
   };
 }

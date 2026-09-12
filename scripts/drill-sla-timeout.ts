@@ -2,7 +2,7 @@ import { config } from '@jisr/core';
 import { closeDb, repo, withTenant } from '@jisr/db';
 
 /**
- * Failure drill 3 — force an SLA breach.
+ * Failure drill 3. Force an SLA breach.
  *
  * Moves an open case's SLA into the past so the next check escalates it. The
  * live path is a waitpoint token timing out, which cannot be hurried; this drill

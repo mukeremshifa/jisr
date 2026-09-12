@@ -4,7 +4,7 @@
  * A site office board: ordered, scannable, grayscale first.
  *
  * Colour is a signal, not decoration. There is exactly one loud colour, and it
- * means "act now" — past SLA, or critical. Everything else is ink on paper.
+ * means "act now": past SLA, or critical. Everything else is ink on paper.
  */
 @theme {
   --color-paper: #fbfbfa;

@@ -1,6 +1,6 @@
 import { randomBytes, randomUUID } from 'node:crypto';
 
-/** Crockford-ish alphabet: no I, L, O, U — unambiguous when read aloud or printed on a sticker. */
+/** Crockford-ish alphabet: no I, L, O, U, so it is unambiguous when read aloud or printed on a sticker. */
 const ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
 
 /** Random, never sequential. Rejection sampling keeps the distribution uniform. */

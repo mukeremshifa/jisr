@@ -2,7 +2,7 @@ import { SUGGESTABLE_ACTIONS, SuggestedActions, wrapUntrusted } from '@jisr/core
 import { systemPrompt } from './shared';
 
 /**
- * C2 — the two or three one-tap actions on a case card.
+ * C2. The two or three one-tap actions on a case card.
  *
  * The model picks *names* from a fixed catalog. It never invents an action, and
  * every parameter it suggests is re-validated against the catalog schema before
@@ -17,9 +17,9 @@ export function suggestActionsSystem(): string {
     'Suggest the two or three actions a supervisor is most likely to take on this case.',
     [
       `Choose only from: ${SUGGESTABLE_ACTIONS.join(', ')}.`,
-      '- schedule_visit needs params { when: string } — a plain time like "today 4 PM".',
-      '- ask_worker needs params { question: string } — one short question.',
-      '- assign needs params { staffId: string } — only when a staff id is given to you below.',
+      '- schedule_visit needs params { when: string }, a plain time like "today 4 PM".',
+      '- ask_worker needs params { question: string }, one short question.',
+      '- assign needs params { staffId: string }, only when a staff id is given to you below.',
       '- close needs params { note: string }.',
       '- approve_pay_step1 needs params {} and only applies to a pay case.',
       'label is the button text: at most four words, plain English, no emoji.',

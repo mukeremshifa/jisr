@@ -3,7 +3,7 @@ import { NotConfiguredError, config, log } from '@jisr/core';
 import type { DownloadedMedia, SendResult, SendWhatsAppInput, SignatureCheck } from './twilio';
 
 /**
- * Meta WhatsApp Cloud API — the second WhatsApp carrier, behind the same four
+ * Meta WhatsApp Cloud API. The second WhatsApp carrier, behind the same four
  * functions the Twilio adapter exposes. `WHATSAPP_PROVIDER` picks between them
  * and nothing downstream changes.
  *
@@ -249,7 +249,7 @@ function asNumber(value: unknown): number | null {
  * Flattens the webhook envelope into the messages and statuses it carries.
  *
  * Meta batches: one POST can hold several entries, each with several changes,
- * each with several messages. Everything is read defensively — this is remote
+ * each with several messages. Everything is read defensively, because this is remote
  * input, and a shape we do not recognise must be skipped rather than throw.
  */
 export function parseMetaWebhook(body: unknown): {

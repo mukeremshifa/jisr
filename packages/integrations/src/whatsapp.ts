@@ -13,7 +13,7 @@ import {
 /**
  * The WhatsApp carrier, chosen by `WHATSAPP_PROVIDER`.
  *
- * Everything above this file — intake, cases, broadcasts, speak-up — sends and
+ * Everything above this file, intake, cases, broadcasts and speak-up, send and
  * fetches media through here and never learns which carrier answered.
  */
 
@@ -60,7 +60,7 @@ export function supportsMediaUpload(): boolean {
  * Uploads outbound audio to the carrier and returns its media id.
  *
  * Sending by id is what makes WhatsApp render a voice note rather than a plain
- * audio file, and it removes the need for a public URL — so a voice note works
+ * audio file, and it removes the need for a public URL, so a voice note works
  * with no object storage configured at all.
  */
 export async function uploadWhatsAppMedia(input: {

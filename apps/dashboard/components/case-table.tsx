@@ -41,10 +41,10 @@ export function CaseTable({ cases }: { cases: CaseListItem[] }) {
                 <SeverityMark severity={item.severity} />
               </td>
               <td className="whitespace-nowrap text-[--color-ink-2]">
-                {item.isSpeakup ? '—' : (item.assetLabel ?? item.siteName ?? '—')}
+                {item.isSpeakup ? '–' : (item.assetLabel ?? item.siteName ?? '–')}
               </td>
               <td className="max-w-[380px]">
-                <span dir="auto">{item.summaryEn || '—'}</span>
+                <span dir="auto">{item.summaryEn || '–'}</span>
                 <div className="mt-[4px] flex flex-wrap gap-[4px]">
                   {!item.confirmedByWorker && !item.isSpeakup ? <Badge tone="outline">unconfirmed</Badge> : null}
                   {item.needsReview ? <Badge tone="outline">needs review</Badge> : null}

@@ -2,7 +2,7 @@ import { PayEvidence, wrapUntrusted } from '@jisr/core';
 import { systemPrompt } from './shared';
 
 /**
- * F3 step 1 — reading a timesheet or payslip photo.
+ * F3 step 1. Reading a timesheet or payslip photo.
  *
  * The model reads *hours*, never money. Every amount in Jisr is computed on the
  * server from the roster rate and a configured multiplier, so a misread number

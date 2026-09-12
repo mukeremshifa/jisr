@@ -3,7 +3,7 @@ import { synthesizeSpeech } from '@jisr/ai';
 import { LANGUAGES, config } from '@jisr/core';
 
 /**
- * C8 — fills in the language matrix by ear.
+ * C8. Fills in the language matrix by ear.
  *
  * Renders the same sentence through both speech providers for every language and
  * writes the files to ./tmp/. A human listens and sets `ttsProvider` and `voice`

@@ -73,7 +73,7 @@ slackRoutes.post('/slack/interactivity', async (c) => {
   return c.text('', 200);
 });
 
-/** `/jisr broadcast <text>` — scoped to the channel's site. */
+/** `/jisr broadcast <text>`, scoped to the channel's site. */
 slackRoutes.post('/slack/commands', async (c) => {
   const rawBody = await c.req.text();
   if (
@@ -96,7 +96,7 @@ slackRoutes.post('/slack/commands', async (c) => {
   if (subcommand !== 'broadcast' || rest.length === 0) {
     return c.json({
       response_type: 'ephemeral',
-      text: 'Usage: `/jisr broadcast <message>` — I will show you every translation before anything is sent.',
+      text: 'Usage: `/jisr broadcast <message>`. I will show you every translation before anything is sent.',
     });
   }
 
@@ -109,7 +109,7 @@ slackRoutes.post('/slack/commands', async (c) => {
 
   return c.json({
     response_type: 'ephemeral',
-    text: 'Translating. I will post a preview here — nothing goes out until you press Send.',
+    text: 'Translating. I will post a preview here. Nothing goes out until you press Send.',
   });
 });
 

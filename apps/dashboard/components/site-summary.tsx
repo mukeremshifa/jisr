@@ -33,7 +33,7 @@ export function SiteSummary({ rows }: { rows: SiteSummaryData[] }) {
           </div>
           <div className="w-[96px] shrink-0 text-right text-[13px] text-[--color-ink-2]">
             {row.open} open
-            {row.pastSla > 0 ? <span style={{ color: 'var(--color-act)' }}> · {row.pastSla} late</span> : null}
+            {row.pastSla > 0 ? <span style={{ color: 'var(--color-act)' }}> {row.pastSla} late</span> : null}
           </div>
         </div>
       ))}

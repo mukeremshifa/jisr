@@ -2,7 +2,7 @@
 
 **Jisr** (Arabic جسر, "bridge") is an AI agent that sits between frontline
 workers and their managers. Workers stay on WhatsApp, in their own language, with
-voice notes and photos and a QR sticker on a door — many of them don't read
+voice notes and photos and a QR sticker on a door, and many of them don't read
 comfortably, and Jisr never asks them to. Supervisors and HR stay in Slack, where
 a messy multilingual voice note has already become a structured case card with
 two or three buttons on it. Jisr routes each case to the right people, relays
@@ -13,7 +13,7 @@ nothing and fill in nothing; managers decide with one tap; all the complexity
 lives inside the agent.
 
 Built for the UAE, where the workforce is WhatsApp-first and deeply multilingual,
-and where the labour rules are specific — the midday outdoor-work break from
+and where the labour rules are specific: the midday outdoor-work break from
 15 June to 15 September, 12:30–3:00 PM, is in the handbook Jisr answers from.
 
 ---
@@ -56,11 +56,11 @@ properly:
 |---|---|
 | **OpenAI** | Transcribes voice notes with the worker's roster language as a hint; the one structured "understand" call that turns a transcript into a case; vision for reading hours off a timesheet photo; speech for the reply |
 | **OpenRouter** | The fallback chain. When OpenAI errors or times out, the same Zod schema is enforced against an ordered list of models, and the log records which one answered |
-| **CopilotKit** | Channels carries the manager surface in Slack — the `/jisr` command, case-card interactions, replies in a thread — and the dashboard's "Ask Jisr" sidebar, whose tools run as the signed-in user |
+| **CopilotKit** | Channels carries the manager surface in Slack (the `/jisr` command, case-card interactions, replies in a thread) and the dashboard's "Ask Jisr" sidebar, whose tools run as the signed-in user |
 | **Trigger.dev** | Every piece of agent work. Queues with a per-worker concurrency key, waitpoint tokens as SLAs, idempotency keys for Twilio retries and broadcast fan-out, and a trace when something goes wrong on stage |
 | **Auth0** | Universal Login for the dashboard; **FGA** for every authorization decision, failing closed; **CIBA** for the second pay approval, on HR's phone, with the payload hash in `authorization_details` |
 | **Exa** | Grounds policy answers in official UAE sources, restricted to an allowlist of domains that is enforced in the request *and* again on every result |
-| **Ambiguous** | The payroll adjustments sheet an approved correction is written to, and case task mirroring — over MCP, calling `tools/list` first rather than guessing tool names |
+| **Ambiguous** | The payroll adjustments sheet an approved correction is written to, and case task mirroring, over MCP, calling `tools/list` first rather than guessing tool names |
 | **Google Cloud** | Cloud Run for both services, a private GCS bucket for media with V4 signed URLs, and Chirp 3 HD voices for the languages the matrix routes to Google. Outbound voice notes go to the carrier's own media store when it has one (Meta, Kapso), so GCS is only required for Twilio |
 | **Mozilla.ai** | Not integrated. `any-guardrail` for PII detection was the last item on the list and the build window ended first |
 
@@ -70,7 +70,7 @@ properly:
 
 ```bash
 pnpm install
-cp .env.example .env          # then fill it in — see below
+cp .env.example .env          # then fill it in, see below
 pnpm db:migrate               # Drizzle migrations, then roles and RLS
 pnpm seed                     # prints DEFAULT_COMPANY_ID and the staff ids
 
@@ -117,7 +117,7 @@ tracked `roster.example.csv` contains reserved test numbers only.
 | What fails | What the user experiences |
 |---|---|
 | OpenAI is down or slow | Nothing visible. OpenRouter answers; the log records which model did |
-| Every model provider is down | The worker's report still reaches a human — the raw transcript, badged "needs review" |
+| Every model provider is down | The worker's report still reaches a human, with the raw transcript, badged "needs review" |
 | A transcript is garbled | "I couldn't hear that clearly. Please send it again as a voice note." |
 | Speech synthesis fails | The text still goes out. A worker who can't read gets less, but the failure is in the logs, not silent |
 | Google has no voice for a language | OpenAI speaks it instead, and the fallback is logged |
@@ -128,7 +128,7 @@ tracked `roster.example.csv` contains reserved test numbers only.
 | A worker floods the number | 20 messages an hour, 600 audio seconds a day. One notice, then silence, and an audit event |
 | The company's daily token budget trips | "HR will review this", and ops is alerted. Jisr stops calling models rather than spending |
 | An unknown number messages | One reply an hour: "This number is for <Company> staff." Nothing reveals whether a number is on the roster |
-| An unrecognised sticker is scanned | "I don't recognise this sticker. Tell me where you are." — plus an audit event, because it may mean tampering |
+| An unrecognised sticker is scanned | "I don't recognise this sticker. Tell me where you are." Plus an audit event, because it may mean tampering |
 | Somebody tries to talk Jisr out of its rules | The case is flagged and audited, and nothing changes. The worker-facing agent has no tool that can approve, pay, reveal or close |
 | A pay amount changes after approval | Execution aborts, a critical audit event is written, and Slack says so. Nothing is paid |
 | No second approver exists for a pay correction | It stays pending and says so. There is no fallback to one person approving twice |
@@ -169,11 +169,11 @@ Started from an empty repository at the event. The milestone commits:
 
 ## Also in `docs/`
 
-- [`architecture.md`](docs/architecture.md) — how the pieces fit, and where each decision lives
-- [`security.md`](docs/security.md) — the full security posture and the Auth0 checklist
-- [`decisions.md`](docs/decisions.md) — every deviation from the brief, and why
-- [`demo-script.md`](docs/demo-script.md) — the two-minute storyboard
-- [`social-post.md`](docs/social-post.md) — a draft post for after the demo
+- [`architecture.md`](docs/architecture.md): how the pieces fit, and where each decision lives
+- [`security.md`](docs/security.md): the full security posture and the Auth0 checklist
+- [`decisions.md`](docs/decisions.md): every deviation from the brief, and why
+- [`demo-script.md`](docs/demo-script.md): the two-minute storyboard
+- [`social-post.md`](docs/social-post.md): a draft post for after the demo
 
 ---
 

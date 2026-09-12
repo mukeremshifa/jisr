@@ -8,7 +8,7 @@ import { AskJisr } from '@/components/ask-jisr';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Jisr — ops',
+  title: 'Jisr ops',
   description: 'Cases, broadcasts, pay approvals, stickers and the audit log.',
   robots: { index: false, follow: false },
 };
@@ -58,7 +58,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                 {actor ? (
                   <span>
                     {actor.staff.displayName}
-                    {' · '}
+                    <span aria-hidden="true" className="mx-[8px] text-[--color-rule]">
+                      |
+                    </span>
                     <a href="/auth/logout" className="underline underline-offset-[3px]">
                       Sign out
                     </a>

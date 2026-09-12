@@ -28,7 +28,7 @@ export const deliveryStatus = validatedTask({
   },
 });
 
-/** C9 — mirror a routed case as a task in Ambiguous. Flagged off by default. */
+/** C9. Mirror a routed case as a task in Ambiguous. Flagged off by default. */
 export const ambiguousMirror = validatedTask({
   id: 'ambiguous.mirror',
   schema: z.object({ companyId: z.string().uuid(), caseId: z.string().uuid() }),

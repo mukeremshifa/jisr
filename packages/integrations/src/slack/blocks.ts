@@ -60,8 +60,8 @@ export function buildCaseCard(input: CaseCardInput): { blocks: Block[]; text: st
   const header = [
     SEVERITY_DOT[input.severity],
     `*${escapeSlackText(titleCase(input.category))}*`,
-    `· ${escapeSlackText(input.severity)}`,
-    location ? `· ${escapeSlackText(location)}` : '',
+    escapeSlackText(input.severity),
+    location ? escapeSlackText(location) : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -88,7 +88,7 @@ export function buildCaseCard(input: CaseCardInput): { blocks: Block[]; text: st
   });
 
   if (input.quoteOriginal) {
-    const confirmed = input.confirmedByWorker ? ' — confirmed by worker' : '';
+    const confirmed = input.confirmedByWorker ? ', confirmed by worker' : '';
     blocks.push({
       type: 'context',
       elements: [
@@ -189,7 +189,7 @@ export function buildSpeakupCard(input: SpeakupCardInput): { blocks: Block[]; te
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `${SEVERITY_DOT[input.severity]} *Speak-up report — identity sealed*\n\`${escapeSlackText(
+        text: `${SEVERITY_DOT[input.severity]} *Speak-up report, identity sealed*\n\`${escapeSlackText(
           input.casePublicId,
         )}\``,
       },
@@ -240,7 +240,7 @@ export function buildSpeakupCard(input: SpeakupCardInput): { blocks: Block[]; te
     ],
   });
 
-  return { blocks, text: `Speak-up report ${input.casePublicId} — identity sealed` };
+  return { blocks, text: `Speak-up report ${input.casePublicId}, identity sealed` };
 }
 
 /** F3 step 1: the supervisor card. Amounts are server-computed and shown read-only. */
@@ -266,7 +266,7 @@ export function buildPaySupervisorCard(input: PaySupervisorCardInput): { blocks:
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `:money_with_wings: *Pay correction — step 1 of 2*\n\`${escapeSlackText(input.casePublicId)}\``,
+        text: `:money_with_wings: *Pay correction, step 1 of 2*\n\`${escapeSlackText(input.casePublicId)}\``,
       },
     },
     {
@@ -288,7 +288,7 @@ export function buildPaySupervisorCard(input: PaySupervisorCardInput): { blocks:
       elements: [
         {
           type: 'mrkdwn',
-          text: 'The amount is calculated from the roster rate. Approving here sends it to HR for a second approval — you cannot approve both steps.',
+          text: 'The amount is calculated from the roster rate. Approving here sends it to HR for a second approval. You cannot approve both steps.',
         },
       ],
     },
@@ -357,7 +357,7 @@ export function buildPayHrCard(input: {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: `:lock: *Pay correction — step 2 of 2*\n\`${escapeSlackText(input.casePublicId)}\``,
+          text: `:lock: *Pay correction, step 2 of 2*\n\`${escapeSlackText(input.casePublicId)}\``,
         },
       },
       {
@@ -439,7 +439,7 @@ export function buildBroadcastPreview(input: {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `:mega: *Broadcast preview* — ${input.recipientCount} worker(s) at ${escapeSlackText(
+        text: `:mega: *Broadcast preview*, ${input.recipientCount} worker(s) at ${escapeSlackText(
           input.siteNames.join(', ') || 'no site',
         )}`,
       },
@@ -474,7 +474,7 @@ export function buildBroadcastPreview(input: {
     ],
   });
 
-  return { blocks, text: 'Broadcast preview — nothing has been sent yet' };
+  return { blocks, text: 'Broadcast preview, nothing has been sent yet' };
 }
 
 /** The "Reply in my own words" modal, and the validated hours modal for F3. */

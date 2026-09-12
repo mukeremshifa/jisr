@@ -1,4 +1,4 @@
-# Al Noor Contracting — worker handbook (extract)
+# Al Noor Contracting, worker handbook (extract)
 
 This is seed content for the demo. It is a short, plain-language extract of the
 kind of handbook a UAE contractor gives its workers, and it is the first place
@@ -22,7 +22,7 @@ is not allowed between **12:30 PM and 3:00 PM**.
 
 During that break your employer provides shade, drinking water and a rest area.
 If you are asked to work outdoors during the midday break, tell Jisr. You can do
-that anonymously by saying "anonymous" — your name is not shown to anyone.
+that anonymously by saying "anonymous". Your name is not shown to anyone.
 
 ## Rest days and leave
 
@@ -53,7 +53,7 @@ that anonymously by saying "anonymous" — your name is not shown to anyone.
 
 ## Safety
 
-- Wear your PPE. If it is damaged or missing, ask for a replacement — you will
+- Wear your PPE. If it is damaged or missing, ask for a replacement. You will
   not be charged for it.
 - Stop work if you believe a task is unsafe, and tell your supervisor.
 - **In an emergency, call 998 (ambulance), 997 (fire and civil defence) or

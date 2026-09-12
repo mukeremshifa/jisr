@@ -4,12 +4,12 @@
 
 ---
 
-**Option A — the short one**
+**Option A, the short one**
 
 We built **Jisr** (Arabic: bridge) at AI Tinkerers "Agents, Everywhere".
 
-Frontline workers in the UAE stay on WhatsApp — voice notes, photos, a QR sticker
-on a door — in Hindi, Urdu, Malayalam, Tagalog, Bengali or Arabic. Their
+Frontline workers in the UAE stay on WhatsApp: voice notes, photos, a QR sticker
+on a door, in Hindi, Urdu, Malayalam, Tagalog, Bengali or Arabic. Their
 supervisors stay in Slack. Jisr turns a messy multilingual voice note into a
 structured case, routes it, and brings the decision back as a voice note in the
 worker's own language.
@@ -26,21 +26,21 @@ to deliver a reply. HR can ask follow-up questions without ever learning who the
 are talking to.
 
 ✅ **A two-person rule for pay.** A supervisor approves, then a *different* HR
-person approves on their phone via @auth0 CIBA — and the approval is bound to a
+person approves on their phone via @auth0 CIBA, and the approval is bound to a
 hash of the exact numbers. Edit the amount after approval and the payment aborts.
 
 🎧 **It still works when the models don't.** @OpenAI first, @OpenRouterAI as the
 fallback chain, and if every provider is gone the raw transcript still reaches a
 human with a "needs review" badge. Nothing is mocked.
 
-Built with @OpenAI · @CopilotKit · @OpenRouterAI · @ExaAILabs · @auth0 ·
-@AmbiguousAI · @triggerdotdev · @mozilla · @googlecloud
+Built with @OpenAI, @CopilotKit, @OpenRouterAI, @ExaAILabs, @auth0,
+@AmbiguousAI, @triggerdotdev, @mozilla and @googlecloud
 
 Repo: <link>
 
 ---
 
-**Option B — the one-liner with a hook**
+**Option B, the one-liner with a hook**
 
 Most frontline workers don't have a problem *reporting* things. They have a
 problem with forms, apps, and languages nobody translates into.

@@ -9,7 +9,7 @@ import { sendToWorker } from '../lib/outbound';
 import { trigger, validatedTask } from '../lib/task-kit';
 
 /**
- * C5 — policy questions.
+ * C5. Policy questions.
  *
  * Answered from the company handbook plus Exa searches restricted to an
  * allowlist of official UAE domains. Two hard rules, enforced by the prompt and

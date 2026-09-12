@@ -11,8 +11,8 @@ import {
 /**
  * CopilotKit Channels, the manager surface.
  *
- * Channels owns the *conversational* side of Slack — the `/jisr` command, replies
- * in a thread, "ask Jisr about this case" — and is defined in `jisr.channel.ts`,
+ * Channels owns the *conversational* side of Slack: the `/jisr` command, replies
+ * in a thread, "ask Jisr about this case". It is defined in `jisr.channel.ts`,
  * which the Channels runtime loads (`npx copilotkit@latest channels setup`).
  *
  * This file covers the other half: proactive posting. A Channel is runtime-driven

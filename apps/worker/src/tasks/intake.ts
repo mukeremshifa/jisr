@@ -49,7 +49,7 @@ import { sendToWorker } from '../lib/outbound';
 import { intakeQueue } from '../queues';
 
 /**
- * C1 — intake.
+ * C1. Intake.
  *
  * One task per inbound message, running on a queue keyed by worker id so a
  * worker's messages are handled in the order they were sent. Everything the
@@ -215,8 +215,8 @@ export const intakeMessage = validatedTask({
       understanding = result.data;
       await chargeTokens(companyId, result.tokensUsed);
     } catch (error) {
-      // Both providers failed. The case still reaches a human — with the raw
-      // transcript and a "needs review" badge — rather than being dropped.
+      // Both providers failed. The case still reaches a human, with the raw
+      // transcript and a "needs review" badge, rather than being dropped.
       log.error('understand_failed_routing_to_human', { messageId, error });
       await routeUnderstood({
         companyId,
@@ -379,7 +379,7 @@ async function ingestMedia(input: {
   return result;
 }
 
-/** F1 — a scanned sticker sets 15 minutes of context, then asks what is wrong. */
+/** F1. A scanned sticker sets 15 minutes of context, then asks what is wrong. */
 async function handleSticker(input: {
   companyId: string;
   workerId: string;
@@ -436,7 +436,7 @@ async function handleSticker(input: {
   return true;
 }
 
-/** F1 — a live location pin resolves to the nearest site whose radius contains it. */
+/** F1. A live location pin resolves to the nearest site whose radius contains it. */
 async function handleLocationPin(input: {
   companyId: string;
   workerId: string;
@@ -464,7 +464,7 @@ async function handleLocationPin(input: {
   log.info('location_matched_site', { siteCode: match.site.code, distanceM: Math.round(match.distanceM) });
 }
 
-/** C6 — reply first, create the case second, ask for a location pin third. */
+/** C6. Reply first, create the case second, ask for a location pin third. */
 async function handleEmergency(input: {
   companyId: string;
   workerId: string;

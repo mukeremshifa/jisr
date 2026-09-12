@@ -9,7 +9,7 @@ const EMIRATES_ID_RE = /\b784[-\s]?\d{4}[-\s]?\d{7}[-\s]?\d\b/g;
 const UAE_IBAN_RE = /\bAE\d{21}\b/gi;
 /**
  * Phone-ish runs: +971..., 05x..., or any 9–15 digit run with separators.
- * Deliberately greedy — a false positive costs a masked number, a false negative
+ * Deliberately greedy. A false positive costs a masked number, a false negative
  * costs a reporter's anonymity.
  */
 const PHONE_RE = /(?:\+|00)?\d[\d\s\-().]{7,18}\d/g;

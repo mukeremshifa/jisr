@@ -31,7 +31,7 @@ import {
 } from '@jisr/integrations';
 
 /**
- * The JSON WhatsApp front door, serving both Meta's Cloud API and Kapso — the
+ * The JSON WhatsApp front door, serving both Meta's Cloud API and Kapso. The
  * same job the Twilio route does: validate, deduplicate, rate-limit, persist,
  * enqueue, and answer immediately. It never calls a model.
  *

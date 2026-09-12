@@ -7,7 +7,7 @@ import { NotConfiguredError, config, log, newMediaKey } from '@jisr/core';
  * readers get a V4 signed URL that expires.
  *
  * Signing works without a key file when the Cloud Run service account has the
- * Service Account Token Creator role on itself — see docs/security.md.
+ * Service Account Token Creator role on itself. See docs/security.md.
  */
 
 const DASHBOARD_URL_TTL_MS = 10 * 60 * 1000;

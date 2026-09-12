@@ -8,7 +8,7 @@ import { config } from '@jisr/core';
  *
  * Two independent checks: the type Twilio declares, and the magic bytes we read
  * ourselves. Both must land in the allowlist. Images are re-encoded with sharp so
- * EXIF (including GPS) never reaches storage — which matters most for speak-up,
+ * EXIF (including GPS) never reaches storage, which matters most for speak-up,
  * where a room number or a location can identify the reporter.
  */
 

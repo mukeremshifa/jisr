@@ -1,7 +1,7 @@
 import { ClarifyingQuestion, ReadBack, Translation, wrapUntrusted } from '@jisr/core';
 import { NO_PROMISE_RULE, PLAIN_LANGUAGE_RULE, glossaryRule, systemPrompt } from './shared';
 
-/** C1 steps 9-10 and C3 — everything Jisr says back to a worker. */
+/** C1 steps 9-10 and C3. Everything Jisr says back to a worker. */
 export const WORKER_MESSAGE_PROMPT_VERSION = 'worker-messages@2';
 
 export const clarifySchema = ClarifyingQuestion;
@@ -29,7 +29,7 @@ export function clarifyUser(input: {
     `Worker's language: ${input.language}`,
     `What you understood so far: ${input.summaryEn}`,
     `Missing: ${input.missing.join(', ')}`,
-    input.alreadyAsked ? `You already asked: "${input.alreadyAsked}" — do not repeat it.` : '',
+    input.alreadyAsked ? `You already asked: "${input.alreadyAsked}". Do not repeat it.` : '',
     'Ask about the first missing item in the list.',
   ]
     .filter(Boolean)

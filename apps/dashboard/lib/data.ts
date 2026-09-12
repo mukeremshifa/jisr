@@ -10,7 +10,7 @@ import { toCaseListItem, toPayRow, type CaseListItem, type PayRow, type Timeline
  *
  * Two rules hold throughout: the company and the sites come from the session,
  * and every record fetched by id is FGA-checked before it is returned. That is
- * what stops an insecure direct object reference — the public ids are random,
+ * what stops an insecure direct object reference. The public ids are random,
  * but randomness is not authorization.
  */
 
@@ -82,7 +82,7 @@ export interface CaseDetail {
   canAct: boolean;
 }
 
-/** Returns null for "not found or not allowed" — the two must look identical. */
+/** Returns null for "not found or not allowed". The two must look identical. */
 export async function getCase(publicId: string): Promise<CaseDetail | null> {
   const actor = await requireActor();
 
@@ -300,8 +300,8 @@ export async function listPayApprovals(limit = 50): Promise<PayRow[]> {
       const approved = row.approvedByStaffId ? await r.staffById(row.approvedByStaffId) : null;
       out.push(
         toPayRow(row, {
-          casePublicId: caseRow?.publicId ?? '—',
-          workerRef: worker?.publicRef ?? '—',
+          casePublicId: caseRow?.publicId ?? '–',
+          workerRef: worker?.publicRef ?? '–',
           proposedBy: proposed?.displayName ?? null,
           approvedBy: approved?.displayName ?? null,
         }),

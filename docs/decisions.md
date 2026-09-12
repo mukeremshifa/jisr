@@ -14,14 +14,14 @@ Slack Web API fallback behind one interface."
 
 **Decision.** Both are implemented behind one `SlackTransport` interface
 (`packages/integrations/src/slack/transport.ts`), and the two entry points the
-brief specifies — `notifyManagers(case)` and `updateCaseCard(case)` — sit on top
+brief specifies, `notifyManagers(case)` and `updateCaseCard(case)`, sit on top
 of it, so swapping transports touches no caller.
 
 The Channels Slack adapter turned out to expose `post`, `update` and
 `onInteraction`, so proactive card posting through Channels is real, not a
 theory: `apps/gateway/src/channels/runtime.ts` renders our Block Kit cards
 through it with `Slack.Raw` when a Slack app token is configured. What Channels
-does *not* allow is starting a Channel from inside our own process — a Channel is
+does *not* allow is starting a Channel from inside our own process. A Channel is
 runtime-driven (`ɵruntime` is marked internal) and is meant to be loaded by the
 CopilotKit Channels runtime. So the conversational surface lives in
 `apps/gateway/src/channels/jisr.channel.ts`, which that runtime loads, and the
@@ -43,14 +43,14 @@ Both paths are still FGA-checked; the Channels path is simply less precise.
 The brief asks for strict schemas that reject unknown keys. That is enforced at
 every *external* boundary: model output, Slack button values, webhook bodies, and
 the action catalog. Internal Trigger.dev payloads use Zod's default strip
-behaviour, so unknown keys are dropped before a handler sees them — the same
+behaviour, so unknown keys are dropped before a handler sees them, the same
 protection, without the compile cost of `.strict()` on large nested objects.
 
 ### 4. `schemaTask` replaced by a thin `validatedTask` wrapper
 
 `apps/worker/src/lib/task-kit.ts` wraps `task()` and parses the payload with Zod
-inside `run`. The guarantee is identical — no task body sees an unvalidated
-payload — and tasks reference each other by string id, which is what lets the
+inside `run`. The guarantee is identical, no task body sees an unvalidated
+payload, and tasks reference each other by string id, which is what lets the
 lifecycle be a cycle (intake → case → pay → case) without import cycles.
 
 ### 5. Static translations for three worker-facing strings
@@ -82,6 +82,40 @@ table carries `company_id`, and every query goes through `withTenant`.
 true duration needs a demuxer. The estimate over-counts rather than under-counts,
 so the per-worker daily audio budget errs towards being strict.
 
+### 9. The em dash ban is enforced by CI, and the middle dot ban is scoped
+
+The client rejected em dashes by name in every surface. A one-time sweep does
+not hold: the WhatsApp carrier commit reintroduced them the same week. So
+`scripts/check-banned.ts` runs in CI beside gitleaks and fails the build on the
+first em dash in any tracked file, and on the rejected fonts and icon libraries.
+The sweep that preceded it touched 73 files. Each em dash was read in context
+and replaced with a comma or a full stop, never a hyphen.
+
+Two scoping decisions inside that guard:
+
+- **The UI null placeholder was an em dash**, in seven dashboard files
+  (`?? '-'` in tables). That is not punctuation, it is a "no value" mark in a
+  ruled table, so it became an en dash, which the client did not ban.
+- **The middle dot ban applies to prose and interface copy, not to drawings.**
+  The ASCII architecture diagrams in `README.md` and `docs/architecture.md` use
+  the dot as a separator inside a picture. The guard skips fenced code blocks
+  for that rule only. Every real instance was removed, including the two the
+  extension brief names: the layout header joining the actor name to sign-out,
+  which is now a hairline, and the Slack card header meta.
+
+### 10. `pnpm doctor` probes rather than reading environment variables
+
+The brief asks for a doctor that means "demo ready". A check that only reads
+`process.env` cannot say that, so where a call is cheap and has no side effect,
+doctor makes a real one: it connects to the database and counts tables and RLS
+policies, calls Slack `auth.test`, asks FGA for a relation it should deny, and
+round-trips the crypto keys including a cross-key decryption that must fail.
+Where a call would cost money or send a message to a worker (the models, the
+WhatsApp carrier) it verifies the credentials are complete and says so.
+
+Warnings never fail the run: a feature that is switched off is not a problem.
+Only failures set a non-zero exit code.
+
 ---
 
 ## A bug worth recording
@@ -104,13 +138,13 @@ Recorded because each one would have failed silently on stage:
 
 1. **Buttons that needed words could never be pressed.** "Reply in my own words"
    and "Ask the reporter" carried empty text, which the action catalog correctly
-   rejected — so the click did nothing. They now open a modal instead, and the
+   rejected, so the click did nothing. They now open a modal instead, and the
    text exists before the action is valid.
 2. **Modal submissions had no tenant.** A Slack `view_submission` carries no
    channel or message, so the company could not be resolved and every modal
    reply was dropped. The company now travels in `private_metadata`.
 3. **HR could not act on a speak-up report.** The check was `can_act`, which
-   resolves through a site — and a speak-up case has none. It is now
+   resolves through a site, and a speak-up case has none. It is now
    `can_view_speakup`, the same relation that let them see the report.
 4. **Speak-up had no waitpoint at all**, so there was nothing for an HR button to
    complete. `speakup.await` now holds one, sharing the decision loop with
@@ -126,7 +160,7 @@ Recorded because each one would have failed silently on stage:
 8. **`slackQuote` could exceed its own length cap** by appending an ellipsis past
    the limit. Caught by a unit test.
 9. **Four high-severity transitive advisories** (`undici`, `ws`, via CopilotKit
-   and Trigger.dev) — pinned out with pnpm overrides rather than forking a
+   and Trigger.dev), pinned out with pnpm overrides rather than forking a
    sponsor SDK.
 
 ## Installed tooling
@@ -139,8 +173,8 @@ Recorded because each one would have failed silently on stage:
 | `qrcode` | Sticker sheet generation (F1) |
 
 No Claude Code skills, plugins or MCP servers were installed for this build. The
-SDK surfaces that mattered — Trigger.dev v4 waitpoints and queues, CopilotKit
-Channels, the Auth0 Next.js SDK v4, CopilotKit's runtime — were verified by
+SDK surfaces that mattered (Trigger.dev v4 waitpoints and queues, CopilotKit
+Channels, the Auth0 Next.js SDK v4, CopilotKit's runtime) were verified by
 reading the installed packages' own type definitions, which is the same source a
 docs server would summarise and is current by construction.
 

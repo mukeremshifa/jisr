@@ -9,6 +9,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json && pnpm --filter @jisr/dashboard typecheck",
     "test": "vitest run",
+    "check:banned": "tsx scripts/check-banned.ts",
+    "doctor": "tsx --env-file-if-exists=.env scripts/doctor.ts",
     "test:watch": "vitest",
     "dev:gateway": "pnpm --filter @jisr/gateway dev",
     "dev:dashboard": "pnpm --filter @jisr/dashboard dev",

@@ -28,7 +28,7 @@ import { trigger, validatedTask } from '../lib/task-kit';
 import { loadCaseContext } from '../lib/case-context';
 
 /**
- * F3 — the two-person rule for pay corrections.
+ * F3. The two-person rule for pay corrections.
  *
  * Four properties hold, and each one is enforced in code rather than by process:
  *
@@ -273,7 +273,7 @@ export const paySupervisorApproved = validatedTask({
       await slackThreadNote(
         companyId,
         caseId,
-        'No HR approver is available who is different from the supervisor who approved step 1. This correction stays pending — two different people must approve it.',
+        'No HR approver is available who is different from the supervisor who approved step 1. This correction stays pending. Two different people must approve it.',
       );
       await audit({
         event: 'pay_no_distinct_approver',
@@ -478,7 +478,7 @@ export const payExecute = validatedTask({
       await slackThreadNote(
         companyId,
         caseId,
-        `The approval is recorded but I could not write the payroll row: ${result.detail}. Nothing has been lost — retry from the dashboard.`,
+        `The approval is recorded but I could not write the payroll row: ${result.detail}. Nothing has been lost. Retry from the dashboard.`,
       );
       return { executed: false as const, reason: result.detail };
     }
@@ -608,7 +608,7 @@ async function readEvidence(
 
 /**
  * The second human. Excluded by staff id *and* by email, because the same person
- * can hold two staff rows. If nobody is left, we return null — never a fallback
+ * can hold two staff rows. If nobody is left, we return null, never a fallback
  * to one person approving twice.
  */
 async function chooseHrApprover(

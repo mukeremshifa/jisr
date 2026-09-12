@@ -2,7 +2,7 @@ import { PolicyAnswer, wrapUntrusted } from '@jisr/core';
 import { NO_PROMISE_RULE, PLAIN_LANGUAGE_RULE, systemPrompt } from './shared';
 
 /**
- * C5 — policy questions, answered only from the company handbook and official
+ * C5. Policy questions, answered only from the company handbook and official
  * UAE government sources. The hard rule is no legal advice: a personal dispute
  * becomes an offer to open a case plus a pointer to MOHRE.
  */

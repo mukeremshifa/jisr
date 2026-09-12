@@ -1,7 +1,7 @@
 import { Auth0Client } from '@auth0/nextjs-auth0/server';
 
 /**
- * Auth0 Universal Login. Jisr builds no password handling of its own — sign-ups
+ * Auth0 Universal Login. Jisr builds no password handling of its own. Sign-ups
  * are disabled on the connection, and brute-force protection, breached-password
  * detection and bot detection are configured in the tenant (docs/security.md).
  *

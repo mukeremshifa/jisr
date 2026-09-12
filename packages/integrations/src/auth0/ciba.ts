@@ -1,7 +1,7 @@
 import { NotConfiguredError, config, log } from '@jisr/core';
 
 /**
- * Auth0 CIBA (Client-Initiated Backchannel Authentication) — F3 step 2.
+ * Auth0 CIBA (Client-Initiated Backchannel Authentication), F3 step 2.
  *
  * HR approves a pay correction on their phone, out of band from Slack. The
  * `binding_message` is what they see on the lock screen, and
@@ -94,7 +94,7 @@ export async function requestApproval(input: CibaRequestInput): Promise<CibaRequ
 
 /**
  * Polls the token endpoint until the approver acts. Respects `interval` and backs
- * off on `slow_down`, as the spec requires — polling faster gets the request
+ * off on `slow_down`, as the spec requires. Polling faster gets the request
  * rejected, not answered sooner.
  */
 export async function pollForApproval(

@@ -5,7 +5,7 @@ import { NotConfiguredError, config, log } from '@jisr/core';
  * Twilio WhatsApp: signature validation, sending, and media download.
  *
  * Signature validation is the gateway's front door. It must run against the exact
- * public URL Twilio signed — including scheme, host and query string — which on
+ * public URL Twilio signed, including scheme, host and query string, which on
  * Cloud Run means the forwarded host, not the internal one.
  * https://www.twilio.com/docs/usage/security#validating-requests
  */

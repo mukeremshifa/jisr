@@ -65,7 +65,7 @@ function Renderers(): null {
       const data = result as { text?: string; siteName?: string | null } | undefined;
       return (
         <div className="card p-[16px]">
-          <div className="label">Draft broadcast{data?.siteName ? ` · ${data.siteName}` : ''}</div>
+          <div className="label">Draft broadcast{data?.siteName ? `, ${data.siteName}` : ''}</div>
           <p className="mt-[8px] text-[14px]" dir="auto">
             {data?.text}
           </p>

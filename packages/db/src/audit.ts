@@ -5,7 +5,7 @@ import { auditLog } from './schema';
 
 /**
  * Security events go two places: `audit_log` (insert-only for the app role) and
- * structured logs. Both, always — a log line can be lost, a row cannot, and a
+ * structured logs. Both, always. A log line can be lost, a row cannot, and a
  * row is useless if nobody is watching the log stream.
  */
 export interface AuditInput {

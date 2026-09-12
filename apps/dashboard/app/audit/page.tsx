@@ -42,8 +42,8 @@ export default async function AuditPage() {
                       <span className="mono">{row.event}</span>
                     )}
                   </td>
-                  <td className="mono whitespace-nowrap text-[--color-ink-3]">{row.actor ?? '—'}</td>
-                  <td className="mono whitespace-nowrap text-[--color-ink-3]">{row.subject ?? '—'}</td>
+                  <td className="mono whitespace-nowrap text-[--color-ink-3]">{row.actor ?? '–'}</td>
+                  <td className="mono whitespace-nowrap text-[--color-ink-3]">{row.subject ?? '–'}</td>
                 </tr>
               ))}
             </tbody>
@@ -52,7 +52,7 @@ export default async function AuditPage() {
       )}
 
       <p className="text-[12px] text-[--color-ink-3]">
-        Phone numbers are never recorded here — a worker appears as an HMAC or a public reference. A speak-up
+        Phone numbers are never recorded here. A worker appears as an HMAC or a public reference. A speak-up
         reporter appears as nothing at all.
       </p>
     </div>

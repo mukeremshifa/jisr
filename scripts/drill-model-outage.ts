@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { callLLM } from '@jisr/ai';
 
 /**
- * Failure drill 1 — the model key is revoked.
+ * Failure drill 1. The model key is revoked.
  *
  * Runs the same structured call three ways and prints what a worker would
  * experience each time:
@@ -16,7 +16,7 @@ import { callLLM } from '@jisr/ai';
  *   pnpm tsx scripts/drill-model-outage.ts
  *
  * Each scenario runs in a child process. `config` is parsed once at module
- * load, so a scenario's env has to be set *before* the LLM layer is imported —
+ * load, so a scenario's env has to be set *before* the LLM layer is imported,
  * mutating `process.env` in-process after the import would change nothing and
  * the drill would silently report a pass for every case.
  */

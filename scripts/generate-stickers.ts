@@ -4,7 +4,7 @@ import { config, stickerUrl } from '@jisr/core';
 import { closeDb, getDb, repo, withTenant } from '@jisr/db';
 
 /**
- * F1 — the printable sticker sheet.
+ * F1. The printable sticker sheet.
  *
  * A4, eight stickers, each with a QR code, the label, the code, a three-step
  * pictogram strip and one short line in five languages. Written as HTML so it
@@ -38,7 +38,7 @@ function escapeHtml(input: string): string {
     .replace(/"/g, '&quot;');
 }
 
-/** Scan, send, speak — drawn rather than written, for the same reason. */
+/** Scan, send, speak, drawn rather than written, for the same reason. */
 function pictogramStrip(): string {
   return `
     <svg class="steps" viewBox="0 0 300 56" role="img" aria-label="Scan, press send, then speak">
@@ -142,7 +142,7 @@ async function main(): Promise<void> {
     .filter((asset) => asset.active)
     .filter((asset) => wanted.length === 0 || wanted.includes(asset.code));
 
-  if (chosen.length === 0) throw new Error('no matching assets — seed some first');
+  if (chosen.length === 0) throw new Error('no matching assets, seed some first');
 
   const stickers: Sticker[] = [];
   for (const asset of chosen) {

@@ -33,7 +33,7 @@ can overtake the read-back it answers.
 
 **Every human wait is a waitpoint token with a timeout.** A manager decision is a
 completed token; an SLA breach is the same token timing out. There is no polling
-loop and no scheduled sweep looking for late cases — the timeout *is* the SLA.
+loop and no scheduled sweep looking for late cases. The timeout *is* the SLA.
 
 ```
 case.route

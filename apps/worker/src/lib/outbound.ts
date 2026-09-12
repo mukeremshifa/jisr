@@ -174,7 +174,7 @@ export async function sendToWorker(input: SendToWorkerInput): Promise<SendResult
 
 /**
  * Speak-up outbound. The worker id comes from the sealed identity and is used
- * only to address the message — it is never written to the case, the logs or
+ * only to address the message. It is never written to the case, the logs or
  * Slack.
  */
 export async function sendToSealedReporter(input: {

@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
 
 /**
- * Pay maths. Integers only — fils for money, hundredths for hours, basis points
- * for multipliers — so no float ever touches an amount a human approves.
+ * Pay maths. Integers only: fils for money, hundredths for hours, basis points
+ * for multipliers, so no float ever touches an amount a human approves.
  *
  *   amount_fils = round(hours_x100 × rate_fils × multiplier_bp / 1_000_000)
  */
@@ -45,7 +45,7 @@ export function aedToFils(aed: number): number {
  * The canonical payload. Approval is bound to *these exact bytes*: at execution
  * time we recompute the hash and abort on any mismatch.
  *
- * Key order is fixed here on purpose — JSON.stringify of a literal preserves
+ * Key order is fixed here on purpose. JSON.stringify of a literal preserves
  * insertion order, and a stable order is what makes the hash reproducible.
  */
 export interface PayAdjustmentPayload {
@@ -90,7 +90,7 @@ export function hashesMatch(a: string, b: string): boolean {
 }
 
 /**
- * Auth0 CIBA binding message. Short, plain, and readable on a lock screen —
+ * Auth0 CIBA binding message. Short, plain, and readable on a lock screen,
  * Auth0 limits this string, so we keep it well under any documented cap and
  * strip anything outside a conservative character set.
  */

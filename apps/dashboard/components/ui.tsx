@@ -100,13 +100,13 @@ export function BridgeRow({
     <div className="bridge">
       <div>
         <p className="bridge-original" dir="auto">
-          {original ?? <span className="text-[--color-ink-3]">—</span>}
+          {original ?? <span className="text-[--color-ink-3]">–</span>}
         </p>
         {languageName ? <div className="label mt-[4px]">{languageName}</div> : null}
       </div>
       <div>
         <p className="bridge-english" dir="auto">
-          {english ?? <span className="text-[--color-ink-3]">—</span>}
+          {english ?? <span className="text-[--color-ink-3]">–</span>}
         </p>
         {languageName ? <div className="label mt-[4px]">English</div> : null}
       </div>

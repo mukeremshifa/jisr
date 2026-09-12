@@ -7,7 +7,7 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 
 /**
  * Migration runner. Connects as `jisr_migrator` (DATABASE_URL_MIGRATOR), applies
- * the Drizzle migrations, then applies the hand-written `sql/` files in order —
+ * the Drizzle migrations, then applies the hand-written `sql/` files in order,
  * roles and row-level security, which Drizzle does not generate.
  */
 const here = dirname(fileURLToPath(import.meta.url));

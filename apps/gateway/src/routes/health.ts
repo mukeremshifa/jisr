@@ -3,7 +3,7 @@ import { config, features, isConfigured } from '@jisr/core';
 
 /**
  * Readiness, for Cloud Run and for the humans on demo day. It reports which
- * dependencies are wired without ever printing a secret — `set` or `unset` only.
+ * dependencies are wired without ever printing a secret. It reports `set` or `unset` only.
  */
 export const healthRoutes = new Hono();
 

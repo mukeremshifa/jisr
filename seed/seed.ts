@@ -80,7 +80,7 @@ async function main(): Promise<void> {
   const companyId = companyRow.id;
 
   // Everything below touches tables with FORCE ROW LEVEL SECURITY, so it must run
-  // inside withTenant() — otherwise Postgres rejects every insert.
+  // inside withTenant(), otherwise Postgres rejects every insert.
   await withTenant(companyId, async ({ tx }) => {
 
   // Site B is geofenced on the demo venue so a live location pin matches it.
@@ -117,8 +117,8 @@ async function main(): Promise<void> {
   const siteByCode = new Map(allSites.map((s) => [s.code, s]));
 
   const staffRows = [
-    { email: 'supervisor.a@example.com', displayName: 'Supervisor — Al Quoz yard' },
-    { email: 'supervisor.b@example.com', displayName: 'Supervisor — Camp and site' },
+    { email: 'supervisor.a@example.com', displayName: 'Supervisor, Al Quoz yard' },
+    { email: 'supervisor.b@example.com', displayName: 'Supervisor, Camp and site' },
     { email: 'hr@example.com', displayName: 'HR Manager' },
     { email: 'compliance@example.com', displayName: 'Compliance Officer' },
     { email: 'ops@example.com', displayName: 'Ops Admin' },

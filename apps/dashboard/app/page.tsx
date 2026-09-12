@@ -23,7 +23,7 @@ export default async function OverviewPage() {
           <Stat label="Past SLA" value={totalLate} act={totalLate > 0} hint="no first response yet" />
           <Stat
             label="Median first response"
-            value={overview.medianFirstResponseMinutes === null ? '—' : `${overview.medianFirstResponseMinutes}m`}
+            value={overview.medianFirstResponseMinutes === null ? '–' : `${overview.medianFirstResponseMinutes}m`}
             hint="today"
           />
           <Stat
@@ -31,7 +31,7 @@ export default async function OverviewPage() {
             value={
               overview.broadcastAckRate
                 ? `${overview.broadcastAckRate.acked}/${overview.broadcastAckRate.total}`
-                : '—'
+                : '–'
             }
             hint="most recent"
           />

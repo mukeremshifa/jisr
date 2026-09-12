@@ -231,7 +231,7 @@ export async function updateCaseCard(
 function statusLineFor(row: Case): string {
   switch (row.status) {
     case 'escalated':
-      return 'Past SLA — escalated to a senior manager';
+      return 'Past SLA, escalated to a senior manager';
     case 'decided':
       return 'Decision sent to the worker';
     case 'closed':
@@ -312,7 +312,7 @@ export async function postEscalation(companyId: string, caseId: string): Promise
   await notifyManagers(companyId, caseId, {
     channelId,
     mentionHere: true,
-    statusLine: 'Past SLA with no first response — escalated',
+    statusLine: 'Past SLA with no first response, escalated',
   });
 
   await withTenant(companyId, ({ tx }) =>
