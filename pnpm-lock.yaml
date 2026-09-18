@@ -117,8 +117,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/integrations
       '@slack/socket-mode':
-        specifier: 2.0.7
-        version: 2.0.7
+        specifier: 3.0.1
+        version: 3.0.1(undici@6.28.1)
       '@trigger.dev/sdk':
         specifier: 4.5.16
         version: 4.5.16(ai@6.0.280(zod@3.25.76))(react@19.3.0)(zod@3.25.76)
@@ -2457,6 +2457,12 @@ packages:
   '@slack/socket-mode@2.0.7':
     resolution: {integrity: sha512-qYy07je71WnEHgRwmw12DlAnZLi5HXmdlI2WUzUK2LH/rYXQpP6uEg462S5CwfE8FoCKUdIigHtYnOOfzZH1lQ==}
     engines: {node: '>= 18', npm: '>= 8.6.0'}
+
+  '@slack/socket-mode@3.0.1':
+    resolution: {integrity: sha512-7L4adgnJtQvQgo5cfIwqHG1QuR8mdZQ/WdMScNDp6uK644ZqnHDAa4rR+vZYfZFdJ5+obCqZQ66Dad8kcwJ4Jg==}
+    engines: {node: '>=20', npm: '>=9.6.4'}
+    peerDependencies:
+      undici: '>=6.27.0'
 
   '@slack/types@2.22.0':
     resolution: {integrity: sha512-sZ9lIgJhPX2qft/tKWiklFlc0o1FWeI7QtciZJfW1+ErH1eGGHvOZ8e73sleTCFEFJp1q/R0WeS8Oa7AsiDprg==}
@@ -8667,6 +8673,14 @@ snapshots:
       - debug
       - supports-color
       - utf-8-validate
+
+  '@slack/socket-mode@3.0.1(undici@6.28.1)':
+    dependencies:
+      '@slack/logger': 5.0.0
+      '@slack/web-api': 8.1.1
+      '@types/node': 22.20.2
+      eventemitter3: 5.0.4
+      undici: 6.28.1
 
   '@slack/types@2.22.0': {}
 
