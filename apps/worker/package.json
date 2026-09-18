@@ -13,7 +13,7 @@
     "@jisr/db": "workspace:*",
     "@jisr/integrations": "workspace:*",
     "@trigger.dev/sdk": "4.5.16",
-    "zod": "3.25.76",
+    "zod": "4.6.5",
     "sharp": "0.35.4"
   },
   "devDependencies": {

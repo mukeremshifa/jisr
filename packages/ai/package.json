@@ -8,6 +8,6 @@
     "@google-cloud/text-to-speech": "7.1.0",
     "@jisr/core": "workspace:*",
     "openai": "7.15.0",
-    "zod": "3.25.76"
+    "zod": "4.6.5"
   }
 }

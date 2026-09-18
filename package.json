@@ -32,7 +32,7 @@
     "tsx": "4.23.13",
     "typescript": "5.9.3",
     "vitest": "3.2.7",
-    "zod": "3.25.76"
+    "zod": "4.6.5"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -42,7 +42,7 @@
       "@depot/cli"
     ],
     "overrides": {
-      "zod": "3.25.76",
+      "zod": "4.6.5",
       "undici": ">=6.27.0",
       "ws": ">=8.21.0"
     }
