@@ -25,7 +25,7 @@
     "drill:webhook-replay": "tsx --env-file-if-exists=.env scripts/drill-webhook-replay.ts"
   },
   "devDependencies": {
-    "@types/node": "22.20.2",
+    "@types/node": "26.5.1",
     "@types/qrcode": "1.5.5",
     "playwright": "^1.63.0",
     "qrcode": "1.5.4",
