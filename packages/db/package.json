@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "@jisr/core": "workspace:*",
-    "drizzle-orm": "0.45.2",
+    "drizzle-orm": "0.45.3",
     "postgres": "3.4.9",
     "zod": "3.25.76"
   },
   "devDependencies": {
-    "drizzle-kit": "0.31.10"
+    "drizzle-kit": "0.31.11"
   }
 }

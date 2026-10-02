@@ -12,11 +12,11 @@
     "@jisr/core": "workspace:*",
     "@jisr/db": "workspace:*",
     "@jisr/integrations": "workspace:*",
-    "@trigger.dev/sdk": "4.5.16",
+    "@trigger.dev/sdk": "4.6.4",
     "zod": "3.25.76",
-    "sharp": "0.35.4"
+    "sharp": "0.35.5"
   },
   "devDependencies": {
-    "trigger.dev": "4.5.16"
+    "trigger.dev": "4.6.4"
   }
 }
