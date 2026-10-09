@@ -5,9 +5,9 @@
   "type": "module",
   "exports": { ".": "./src/index.ts", "./*": "./src/*.ts" },
   "dependencies": {
-    "@google-cloud/text-to-speech": "7.1.0",
+    "@google-cloud/text-to-speech": "7.1.1",
     "@jisr/core": "workspace:*",
-    "openai": "7.15.0",
+    "openai": "7.28.0",
     "zod": "3.25.76"
   }
 }
