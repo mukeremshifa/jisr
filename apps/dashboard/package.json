@@ -10,20 +10,20 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@auth0/nextjs-auth0": "4.29.0",
-    "@copilotkit/react-core": "1.71.0",
-    "@copilotkit/react-ui": "1.71.0",
-    "@copilotkit/runtime": "1.71.0",
+    "@auth0/nextjs-auth0": "4.32.0",
+    "@copilotkit/react-core": "1.79.0",
+    "@copilotkit/react-ui": "1.79.0",
+    "@copilotkit/runtime": "1.79.0",
     "@jisr/core": "workspace:*",
     "@jisr/db": "workspace:*",
     "@jisr/integrations": "workspace:*",
-    "@tanstack/react-query": "5.102.8",
-    "next": "16.3.4",
+    "@tanstack/react-query": "5.104.2",
+    "next": "16.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "zod": "3.25.76",
-    "openai": "7.15.0",
-    "@trigger.dev/sdk": "4.5.16"
+    "openai": "7.32.0",
+    "@trigger.dev/sdk": "4.7.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.3",

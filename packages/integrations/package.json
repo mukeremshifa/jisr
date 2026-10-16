@@ -5,16 +5,16 @@
   "type": "module",
   "exports": { ".": "./src/index.ts", "./*": "./src/*.ts" },
   "dependencies": {
-    "@google-cloud/storage": "8.1.0",
+    "@google-cloud/storage": "8.4.0",
     "@jisr/core": "workspace:*",
     "@jisr/db": "workspace:*",
-    "@modelcontextprotocol/sdk": "1.30.0",
+    "@modelcontextprotocol/sdk": "1.32.1",
     "@openfga/sdk": "0.9.7",
-    "@slack/web-api": "8.1.1",
-    "exa-js": "2.19.0",
-    "file-type": "22.0.2",
-    "sharp": "0.35.4",
-    "twilio": "6.1.1",
+    "@slack/web-api": "8.2.0",
+    "exa-js": "2.25.0",
+    "file-type": "22.1.1",
+    "sharp": "0.35.5",
+    "twilio": "6.2.0",
     "zod": "3.25.76"
   }
 }
